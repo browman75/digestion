@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化系統配對遊戲</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .organs-section, .functions-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        .organ-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .function-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .organ-card {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .organ-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .organ-card.selected {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        .function-card {
+            background: linear-gradient(45deg, #fd79a8, #e84393);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .function-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .function-card.matched {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            transform: scale(0.95);
+        }
+
+        .function-card.wrong {
+            background: linear-gradient(45deg, #e17055, #d63031);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-reset {
+            background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+            color: white;
+        }
+
+        .btn-hint {
+            background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
+            color: #2d3436;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .message.success {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+        }
+
+        .message.error {
+            background: linear-gradient(45deg, #e17055, #d63031);
+            color: white;
+        }
+
+        .message.info {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #27ae60;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .answer-display {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .modal-instruction {
+            font-size: 1.1rem;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .modal-close-btn {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #636e72, #2d3436);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+
+        .nav-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .nav-btn:disabled:hover {
+            background: #ddd;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .organ-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="game-container">
+        <header class="header">
+            <h1 class="title">🎮 消化系統配對遊戲 🎮</h1>
+            <div class="score-board">
+                <div class="score">正確: <span id="correct">0</span></div>
+                <div class="score">錯誤: <span id="wrong">0</span></div>
+                <div class="score">剩餘: <span id="remaining">11</span></div>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <section class="organs-section">
+                <h2 class="section-title">🏥 消化器官</h2>
+                <div class="organ-grid" id="organGrid">
+                    <!-- 器官卡片將由JavaScript生成 -->
+                </div>
+            </section>
+
+            <section class="functions-section">
+                <h2 class="section-title">⚡ 功能描述</h2>
+                <div class="function-grid" id="functionGrid">
+                    <!-- 功能卡片將由JavaScript生成 -->
+                </div>
+            </section>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-reset" onclick="resetGame()">🔄 重新開始</button>
+            <button class="btn btn-hint" onclick="showHint()">💡 提示</button>
+        </div>
+
+        <div id="message" class="message" style="display: none;"></div>
+
+        <nav class="navigation">
+            <button class="nav-btn" onclick="previousPage()">
+                ← 上一頁
+            </button>
+            <button class="nav-btn" id="nextPageBtn" onclick="nextPage()" disabled>
+                下一頁 →
+            </button>
+        </nav>
+    </main>
+
+    <div class="modal-overlay" id="answerModal">
+        <div class="modal-content">
+            <h2 class="modal-title">🎉 配對成功！</h2>
+            <div class="answer-display" id="organAnswer"></div>
+            <div class="answer-display" id="functionAnswer"></div>
+            <p class="modal-instruction">
+                📝 請將以上答案寫在你的學習單上，然後點選「繼續遊戲」按鈕！
+            </p>
+            <button class="modal-close-btn" onclick="closeAnswerModal()">繼續遊戲</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        const gameData = [
+            { organ: "口腔", function: "咀嚼食物，唾液澱粉酶開始分解澱粉" },
+            { organ: "唾腺", function: "分泌唾液，含有澱粉酶幫助消化澱粉" },
+            { organ: "食道", function: "蠕動將食物推送到胃部" },
+            { organ: "胃", function: "暫時儲存食物，進行初步蛋白質消化" },
+            { organ: "胃腺", function: "分泌胃液，含胃酸和胃蛋白酶" },
+            { organ: "小腸", function: "主要消化和吸收營養物質的場所" },
+            { organ: "肝臟", function: "分泌膽汁，幫助脂肪乳化和消化" },
+            { organ: "胰臟", function: "分泌胰液，含多種消化酶" },
+            { organ: "腸腺", function: "分泌腸液，含有多種消化酶" },
+            { organ: "大腸", function: "吸收水分，形成糞便" },
+            { organ: "肛門", function: "排出消化後的廢物" }
+        ];
+
+        let selectedOrgan = null;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let matchedPairs = new Set();
+
+        function initGame() {
+            const organGrid = document.getElementById('organGrid');
+            const functionGrid = document.getElementById('functionGrid');
+            
+            // 清空網格
+            organGrid.innerHTML = '';
+            functionGrid.innerHTML = '';
+            
+            // 創建器官卡片
+            gameData.forEach((item, index) => {
+                const organCard = document.createElement('div');
+                organCard.className = 'organ-card';
+                organCard.textContent = item.organ;
+                organCard.dataset.index = index;
+                organCard.onclick = () => selectOrgan(index);
+                organGrid.appendChild(organCard);
+            });
+            
+            // 創建功能卡片（打亂順序）
+            const shuffledFunctions = [...gameData].sort(() => Math.random() - 0.5);
+            shuffledFunctions.forEach((item, displayIndex) => {
+                const functionCard = document.createElement('div');
+                functionCard.className = 'function-card';
+                functionCard.textContent = item.function;
+                functionCard.dataset.index = gameData.indexOf(item);
+                functionCard.onclick = () => selectFunction(gameData.indexOf(item));
+                functionGrid.appendChild(functionCard);
+            });
+            
+            updateScore();
+        }
+
+        function selectOrgan(index) {
+            if (matchedPairs.has(index)) return;
+            
+            // 移除之前選中的器官
+            document.querySelectorAll('.organ-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 選中新器官
+            const organCard = document.querySelector(`[data-index="${index}"]`);
+            organCard.classList.add('selected');
+            selectedOrgan = index;
+            
+            showMessage('已選擇 ' + gameData[index].organ + '，請點選對應的功能！', 'info');
+        }
+
+        function selectFunction(index) {
+            if (!selectedOrgan && selectedOrgan !== 0) {
+                showMessage('請先選擇一個器官！', 'error');
+                return;
+            }
+            
+            if (matchedPairs.has(index)) return;
+            
+            const functionCard = document.querySelector(`.function-card[data-index="${index}"]`);
+            
+            if (selectedOrgan === index) {
+                // 配對成功
+                correctCount++;
+                matchedPairs.add(index);
+                
+                functionCard.classList.add('matched');
+                const organCard = document.querySelector(`.organ-card[data-index="${index}"]`);
+                organCard.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
+                organCard.classList.remove('selected');
+                
+                // 顯示答案視窗
+                showAnswerModal(gameData[index].organ, gameData[index].function);
+                
+                if (matchedPairs.size === gameData.length) {
+                    setTimeout(() => {
+                        showMessage('🏆 恭喜完成！你已經掌握了消化系統的知識！現在可以前往下一頁了！', 'success');
+                        createCelebration();
+                        enableNextPage();
+                    }, 2000);
+                }
+                
+                selectedOrgan = null;
+            } else {
+                // 配對錯誤
+                wrongCount++;
+                functionCard.classList.add('wrong');
+                
+                setTimeout(() => {
+                    functionCard.classList.remove('wrong');
+                }, 500);
+                
+                showMessage('❌ 配對錯誤！請重新思考 ' + gameData[selectedOrgan].organ + ' 的功能', 'error');
+            }
+            
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('wrong').textContent = wrongCount;
+            document.getElementById('remaining').textContent = gameData.length - matchedPairs.size;
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function resetGame() {
+            selectedOrgan = null;
+            correctCount = 0;
+            wrongCount = 0;
+            matchedPairs.clear();
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('celebration').innerHTML = '';
+            disableNextPage();
+            initGame();
+            showMessage('🎮 遊戲重新開始！選擇器官並找出對應功能吧！', 'info');
+        }
+
+        function showHint() {
+            if (!selectedOrgan && selectedOrgan !== 0) {
+                showMessage('💡 提示：先點選一個藍色的器官卡片！', 'info');
+                return;
+            }
+            
+            const hints = {
+                0: "想想看，嘴巴除了咀嚼還會分泌什麼？",
+                1: "這個腺體讓你的嘴巴保持濕潤，還能幫助消化！",
+                2: "這是一條管道，食物通過它到達胃部",
+                3: "這個器官像個袋子，會分泌酸性物質",
+                4: "它分泌的液體很酸，能殺菌和消化蛋白質",
+                5: "這是消化道最長的部分，營養主要在這裡被吸收",
+                6: "這個器官很大，能分泌幫助消化脂肪的液體",
+                7: "它分泌的液體含有很多種酶，幫助消化各種營養",
+                8: "小腸壁上的腺體，分泌最後的消化液",
+                9: "主要工作是回收水分，讓廢物成形",
+                10: "消化道的出口，排出不需要的物質"
+            };
+            
+            showMessage('💡 ' + hints[selectedOrgan], 'info');
+        }
+
+        function showAnswerModal(organ, functionText) {
+            document.getElementById('organAnswer').textContent = '器官：' + organ;
+            document.getElementById('functionAnswer').textContent = '功能：' + functionText;
+            document.getElementById('answerModal').style.display = 'flex';
+        }
+
+        function closeAnswerModal() {
+            document.getElementById('answerModal').style.display = 'none';
+        }
+
+        function previousPage() {
+            showMessage('📖 這是上一頁功能，可以連結到前一個學習頁面', 'info');
+        }
+
+        function nextPage() {
+            if (matchedPairs.size === gameData.length) {
+                showMessage('📖 這是下一頁功能，可以連結到下一個學習頁面', 'info');
+            } else {
+                showMessage('⚠️ 請先完成所有配對才能前往下一頁！', 'error');
+            }
+        }
+
+        function enableNextPage() {
+            const nextBtn = document.getElementById('nextPageBtn');
+            nextBtn.disabled = false;
+        }
+
+        function disableNextPage() {
+            const nextBtn = document.getElementById('nextPageBtn');
+            nextBtn.disabled = true;
+        }
+
+        function createCelebration() {
+            const celebration = document.getElementById('celebration');
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                celebration.appendChild(confetti);
+            }
+            
+            setTimeout(() => {
+                celebration.innerHTML = '';
+            }, 4000);
+        }
+
+        // 初始化遊戲
+        initGame();
+        showMessage('🎯 歡迎來到消化系統配對遊戲！點選器官，再點選對應功能！', 'info');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9914d26c25d7a9cb',t:'MTc2MDkyNDU4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
