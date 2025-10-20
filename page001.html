@@ -348,9 +348,7 @@
                     <h3>📋 遊戲規則</h3>
                     <ul>
                         <li>按照食物在人體內的消化順序排列器官</li>
-                        <li>從口腔開始，到肛門結束</li>
                         <li>點選右側的器官按鈕來排序</li>
-                        <li>注意：有些器官不屬於消化道！</li>
                         <li>全部答對才能進入下一頁</li>
                         <li>可以重新開始重新排列</li>
                     </ul>
@@ -382,18 +380,17 @@
                     </div>
                     
                     <div class="organ-buttons" id="organButtons">
-                        <button class="organ-btn" data-organ="口腔">口腔</button>
-                        <button class="organ-btn" data-organ="食道">食道</button>
-                        <button class="organ-btn" data-organ="胃">胃</button>
-                        <button class="organ-btn" data-organ="肝臟">肝臟</button>
-                        <button class="organ-btn" data-organ="心臟">心臟</button>
-                        <button class="organ-btn" data-organ="肺臟">肺臟</button>
-                        <button class="organ-btn" data-organ="小腸">小腸</button>
-                        <button class="organ-btn" data-organ="大腸">大腸</button>
-                        <button class="organ-btn" data-organ="腎臟">腎臟</button>
-                        <button class="organ-btn" data-organ="肛門">肛門</button>
-                        <button class="organ-btn" data-organ="膀胱">膀胱</button>
-                        <button class="organ-btn" data-organ="脾臟">脾臟</button>
+                        <button class="organ-btn" data-organ="B\口腔">B\口腔</button>
+                        <button class="organ-btn" data-organ="D\食道">D\食道</button>
+                        <button class="organ-btn" data-organ="G\胃">G\胃</button>
+                        <button class="organ-btn" data-organ="E\肝臟">E\肝臟</button>
+                        <button class="organ-btn" data-organ="C\咽喉">C\咽喉</button>
+                        <button class="organ-btn" data-organ="F\膽囊">F\膽囊</button>
+                        <button class="organ-btn" data-organ="I\小腸">I\小腸</button>
+                        <button class="organ-btn" data-organ="J\大腸">J\大腸</button>
+                        <button class="organ-btn" data-organ="H\胰臟">H\胰臟</button>
+                        <button class="organ-btn" data-organ="K\肛門">K\肛門</button>
+                        <button class="organ-btn" data-organ="A\唾腺">A\唾腺</button>
                     </div>
                     
                     <div class="controls">
@@ -414,7 +411,7 @@
     </div>
 
     <script>
-        const correctSequence = ['口腔', '食道', '胃', '小腸', '大腸', '肛門'];
+        const correctSequence = ['B\口腔','C\咽喉', 'D\食道', 'G\胃', 'I\小腸', 'J\大腸', 'K\肛門'];
         let userSequence = [];
         let gameCompleted = false;
 
@@ -448,8 +445,8 @@
         }
 
         function checkAnswer() {
-            if (userSequence.length !== 6) {
-                showFeedback('請選擇完整的 6 個消化道器官！', 'error');
+            if (userSequence.length !== 7) {
+                showFeedback('請選擇完整的 7 個消化道器官！', 'error');
                 return;
             }
 
