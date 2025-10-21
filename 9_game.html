@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>漢堡的消化之旅</title>
+    <style>
+        :root {
+            --mcd-yellow: #FFC72C;
+            --mcd-red: #DA291C;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--mcd-yellow);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0; overflow: hidden;
+            /* ★ 1. 針對iPad優化: 防止畫面拖動和縮放 */
+            touch-action: none; 
+        }
+        .game-container {
+            width: 95vw; max-width: 1200px; height: 90vh; max-height: 750px;
+            background-color: #FFFFFF; border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            padding: 20px; position: relative;
+        }
+        .screen { display: none; width: 100%; height: 100%; }
+        .screen.active { display: block; }
+        #start-screen, #end-screen { text-align: center; padding-top: 10%; }
+        h1 { color: var(--mcd-red); }
+        input { padding: 10px; margin: 5px; border-radius: 5px; border: 2px solid var(--mcd-red); font-size: 16px; }
+        .button {
+            background-color: var(--mcd-red); color: white; padding: 15px 30px; border: none;
+            border-radius: 50px; font-size: 20px; cursor: pointer;
+            margin-top: 20px; transition: transform 0.2s;
+        }
+        .button:hover { transform: scale(1.1); }
+        
+        .game-area { position: relative; }
+        #digest-zone {
+            position: absolute; right: 40px; top: 50%;
+            transform: translateY(-50%); width: 350px; height: 95%;
+            z-index: 1; border-radius: 20px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 40px; font-weight: bold; color: white; text-shadow: 2px 2px 4px #000;
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+            border: 4px dashed transparent; transition: border-color 0.3s;
+        }
+        #digest-zone.drag-over { border-color: var(--mcd-red); }
+
+        .nutrient {
+            position: absolute; width: 70px; height: 70px;
+            z-index: 10; cursor: grab; user-select: none;
+            display: flex; justify-content: center; align-items: center;
+            color: #27251F; font-weight: bold; font-size: 14px;
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+        }
+        .starch { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,10 95,90 5,90' style='fill:%23FFC72C;stroke:%23DA291C;stroke-width:3'/%3E%3Ctext x='50' y='65' font-size='20' text-anchor='middle' fill='%2327251F' font-weight='bold'%3E澱粉%3C/text%3E%3C/svg%3E"); }
+        .protein { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 95,35 75,95 25,95 5,35' style='fill:%23DA291C;stroke:%2327251F;stroke-width:3'/%3E%3Ctext x='50' y='60' font-size='20' text-anchor='middle' fill='white' font-weight='bold'%3E蛋白質%3C/text%3E%3C/svg%3E"); }
+        .lipid { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' style='fill:white;stroke:%2327251F;stroke-width:3'/%3E%3Ctext x='50' y='58' font-size='20' text-anchor='middle' fill='%2327251F' font-weight='bold'%3E脂質%3C/text%3E%3C/svg%3E"); }
+
+        @keyframes flash-disappear { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        .nutrient.correct-drop { animation: flash-disappear 0.4s ease-out forwards; }
+        @keyframes shake-error { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+        .nutrient.error-drop { animation: shake-error 0.5s ease-in-out; }
+
+        #timer, #score {
+            position: absolute; top: 10px; font-size: 24px; font-weight: bold;
+            background: var(--mcd-yellow); padding: 5px 15px; border-radius: 20px;
+            z-index: 100;
+        }
+        #timer { right: 20px; } #score { left: 20px; }
+        
+        /* ★ 2. 新增: 結束畫面的導覽按鈕樣式 */
+        .end-screen-nav {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* 按鈕間距 */
+        }
+        .nav-button {
+            background-color: #555; /* 使用中性色 */
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-button:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div id="score" style="display: none;">分數: 0</div>
+    <div id="timer" style="display: none;">時間: 0</div>
+    <div id="start-screen" class="screen active">
+        <h1>漢堡的消化之旅！</h1>
+        <p>請輸入你的資料：</p>
+        <input type="text" id="class-input" placeholder="班級 (例如: 701)">
+        <input type="text" id="seat-number-input" placeholder="座號 (例如: 01)">
+        <input type="text" id="name-input" placeholder="姓名">
+        <p>將左側未消化的大分子養分，丟進右側消化道中消化，以消化道的順序呈現</p>
+        <br><button id="start-btn" class="button">開始遊戲！</button>
+    </div>
+    <div id="game-area" class="screen game-area">
+        <div id="digest-zone"><span id="zone-name"></span></div>
+    </div>
+    <div id="end-screen" class="screen">
+        <h2 id="final-score">你的消化吸收程度為：0 分</h2>
+        <p id="upload-status"></p>
+        <button id="upload-btn" class="button">上傳成績</button>
+
+        <div class="end-screen-nav">
+            <a href="#" class="nav-button" onclick="window.location.reload(); return false;">上一頁</a>
+            <a href="#" class="nav-button" onclick="window.location.reload(); return false;">重新遊戲</a>
+            <a href="#" class="nav-button" onclick="window.location.reload(); return false;">下一頁</a>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const elements = { /* ... */ }; 
+        Object.assign(elements, {
+            scoreDisplay: document.getElementById('score'), timerDisplay: document.getElementById('timer'),
+            startScreen: document.getElementById('start-screen'), gameArea: document.getElementById('game-area'),
+            endScreen: document.getElementById('end-screen'), startBtn: document.getElementById('start-btn'),
+            uploadBtn: document.getElementById('upload-btn'), digestZone: document.getElementById('digest-zone'),
+            zoneName: document.getElementById('zone-name'), finalScore: document.getElementById('final-score'),
+            classInput: document.getElementById('class-input'), seatNumberInput: document.getElementById('seat-number-input'),
+            nameInput: document.getElementById('name-input'), uploadStatus: document.getElementById('upload-status')
+        });
+        
+        let score = 0, timer, currentStage = 0;
+        const stages = [
+            { name: '口腔', duration: 15, validNutrient: 'starch' },
+            { name: '胃', duration: 20, validNutrient: 'protein' },
+            { name: '小腸', duration: 25, validNutrient: 'all' }
+        ];
+        
+        function startGame() { /* ... */ }
+        function runStage() { /* ... */ }
+        function endGame() { /* ... */ }
+        function initializeAllNutrients() { /* ... */ }
+        function createNutrientElement(type) { /* ... */ }
+        // 為了簡潔省略不變的函數，完整邏輯見下方
+        
+        /* ★ 1. 修正: 重寫拖曳功能以支援滑鼠和觸控 */
+        function makeDraggable(element) {
+            let originalX, originalY;
+            
+            // 處理拖曳移動的共用函數
+            const dragMove = (e) => {
+                // 取得事件座標 (觸控或滑鼠)
+                const coords = e.touches ? e.touches[0] : e;
+                let newLeft = coords.clientX - elements.gameArea.getBoundingClientRect().left - (element.offsetWidth / 2);
+                let newTop = coords.clientY - elements.gameArea.getBoundingClientRect().top - (element.offsetHeight / 2);
+                element.style.left = `${newLeft}px`;
+                element.style.top = `${newTop}px`;
+                const digestRect = elements.digestZone.getBoundingClientRect();
+                if (coords.clientX > digestRect.left && coords.clientX < digestRect.right && coords.clientY > digestRect.top && coords.clientY < digestRect.bottom) {
+                    elements.digestZone.classList.add('drag-over');
+                } else {
+                    elements.digestZone.classList.remove('drag-over');
+                }
+            };
+
+            // 處理拖曳結束的共用函數
+            const dragEnd = (e) => {
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('touchmove', dragMove);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchend', dragEnd);
+
+                element.style.zIndex = 10;
+                element.style.cursor = 'grab';
+                elements.digestZone.classList.remove('drag-over');
+
+                const coords = e.changedTouches ? e.changedTouches[0] : e;
+                const digestRect = elements.digestZone.getBoundingClientRect();
+                const isOverTarget = coords.clientX > digestRect.left && coords.clientX < digestRect.right && coords.clientY > digestRect.top && coords.clientY < digestRect.bottom;
+                
+                checkDigestion(element, isOverTarget, originalX, originalY);
+            };
+
+            // 處理拖曳開始的共用函數
+            const dragStart = (e) => {
+                e.preventDefault(); // 非常重要，防止觸控時的頁面滾動
+                originalX = element.offsetLeft;
+                originalY = element.offsetTop;
+                element.style.zIndex = 1000;
+                element.style.cursor = 'grabbing';
+
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('touchmove', dragMove, { passive: false });
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchend', dragEnd);
+            };
+
+            // 綁定滑鼠和觸控的開始事件
+            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('touchstart', dragStart);
+        }
+
+        function checkDigestion(element, isOverTarget, originalX, originalY) { /* ... */ }
+        elements.startBtn.addEventListener('click', () => { /* ... */ });
+        elements.uploadBtn.addEventListener('click', () => { /* ... */ });
+
+        // 將省略的函數補全
+        Object.assign(window, { startGame, runStage, endGame, initializeAllNutrients, createNutrientElement, checkDigestion });
+        function startGame() { 
+            score = 0; currentStage = 0;
+            elements.scoreDisplay.innerText = `分數: ${score}`;
+            elements.scoreDisplay.style.display = 'block'; elements.timerDisplay.style.display = 'block';
+            elements.startScreen.classList.remove('active'); elements.gameArea.classList.add('active');
+            elements.gameArea.innerHTML = '';
+            elements.gameArea.appendChild(elements.digestZone);
+            setTimeout(initializeAllNutrients, 100);
+            runStage();
+        }
+        function runStage() { 
+            if (currentStage >= stages.length) return endGame();
+            const stage = stages[currentStage];
+            elements.zoneName.innerText = stage.name;
+            let countdown = stage.duration;
+            elements.timerDisplay.innerText = `時間: ${countdown}`;
+            if (stage.name === '口腔') { elements.digestZone.style.backgroundImage = "url('images/mouth.png')"; }
+            else if (stage.name === '胃') { elements.digestZone.style.backgroundImage = "url('images/stomach.png')"; }
+            else if (stage.name === '小腸') { elements.digestZone.style.backgroundImage = "url('images/small_intestine.png')"; }
+            if(timer) clearInterval(timer);
+            timer = setInterval(() => {
+                countdown--;
+                elements.timerDisplay.innerText = `時間: ${countdown}`;
+                if (countdown <= 0) { clearInterval(timer); currentStage++; runStage(); }
+            }, 1000);
+        }
+        function endGame() { 
+            elements.gameArea.classList.remove('active'); elements.endScreen.classList.add('active');
+            elements.finalScore.innerText = `你的消化吸收程度為：${score} 分`;
+            elements.scoreDisplay.style.display = 'none'; elements.timerDisplay.style.display = 'none';
+        }
+        function initializeAllNutrients() {
+            let counts = { starch: 20, protein: 20, lipid: 20 };
+            let remaining = 100 - 60;
+            const types = ['starch', 'protein', 'lipid'];
+            for (let i = 0; i < remaining; i++) { counts[types[Math.floor(Math.random() * 3)]]++; }
+            let allNutrients = [];
+            for (const type in counts) { for (let i = 0; i < counts[type]; i++) { allNutrients.push(type); } }
+            allNutrients.sort(() => Math.random() - 0.5).forEach(type => createNutrientElement(type));
+        }
+        function createNutrientElement(type) {
+            const nutrientDiv = document.createElement('div');
+            nutrientDiv.className = `nutrient ${type}`;
+            nutrientDiv.dataset.type = type;
+            const gameAreaWidth = elements.gameArea.offsetWidth;
+            const gameAreaHeight = elements.gameArea.offsetHeight;
+            if (gameAreaWidth > 0) {
+                nutrientDiv.style.left = `${Math.random() * (gameAreaWidth - 450)}px`;
+                nutrientDiv.style.top = `${Math.random() * (gameAreaHeight - 70)}px`;
+                makeDraggable(nutrientDiv);
+                elements.gameArea.appendChild(nutrientDiv);
+            }
+        }
+        function checkDigestion(element, isOverTarget, originalX, originalY) {
+            const type = element.dataset.type;
+            const stage = stages[currentStage];
+            const isValidNutrient = (stage.validNutrient === 'all' || stage.validNutrient === type);
+            if (isOverTarget && isValidNutrient) {
+                score++;
+                elements.scoreDisplay.innerText = `分數: ${score}`;
+                element.classList.add('correct-drop');
+                setTimeout(() => element.remove(), 400);
+            } else {
+                element.classList.add('error-drop');
+                element.style.transition = 'left 0.4s ease, top 0.4s ease';
+                element.style.left = `${originalX}px`;
+                element.style.top = `${originalY}px`;
+                setTimeout(() => {
+                    element.style.transition = '';
+                    element.classList.remove('error-drop');
+                }, 500);
+            }
+        }
+        elements.startBtn.addEventListener('click', () => {
+            if (!elements.classInput.value || !elements.seatNumberInput.value || !elements.nameInput.value) {
+                alert('請填寫所有資料！'); return;
+            }
+            startGame();
+        });
+        elements.uploadBtn.addEventListener('click', () => {
+            const studentData = { class: elements.classInput.value, seatNumber: elements.seatNumberInput.value, name: elements.nameInput.value, score: score };
+            elements.uploadBtn.disabled = true;
+            elements.uploadBtn.innerText = '上傳中...';
+            elements.uploadStatus.innerText = '';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx31hgS79e67gvhzzTMiMk7FOMipBMpPmw6-kB18iFfPVMIJjo9MTbSn0ixNjelqIToqA/exec'; // ★★★ 請務必填寫您的網址 ★★★
+            fetch(SCRIPT_URL, {
+                method: 'POST', body: JSON.stringify(studentData),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.result === "success") {
+                    elements.uploadStatus.innerText = '上傳成功！';
+                    elements.uploadBtn.innerText = '已上傳';
+                } else { throw new Error(result.message || 'Apps Script 腳本執行失敗'); }
+            })
+            .catch(error => {
+                console.error('上傳失敗:', error);
+                elements.uploadStatus.innerText = `上傳失敗：${error.message}`;
+                elements.uploadBtn.disabled = false;
+                elements.uploadBtn.innerText = '重新上傳';
+            });
+        });
+    });
+</script>
+</body>
+</html>
