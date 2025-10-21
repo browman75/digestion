@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>為什麼糞便是排遺，不是排泄物？</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            display: inline-block;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex: 1;
+        }
+        
+        .left-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background: #ffeaa7;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .right-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+        
+        .quiz-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .matching-game {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .terms-column, .definitions-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .column-title {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .term-item, .definition-item {
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .term-item {
+            background: #74b9ff;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .definition-item {
+            background: #fd79a8;
+            color: white;
+        }
+        
+        .term-item:hover, .definition-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .term-item.selected {
+            border-color: #0984e3;
+            box-shadow: 0 0 15px rgba(9, 132, 227, 0.5);
+        }
+        
+        .definition-item.selected {
+            border-color: #e84393;
+            box-shadow: 0 0 15px rgba(232, 67, 147, 0.5);
+        }
+        
+        .term-item.matched, .definition-item.matched {
+            background: #00b894;
+            border-color: #00a085;
+            opacity: 0.8;
+            cursor: default;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .prev-btn {
+            background: #636e72;
+            color: white;
+        }
+        
+        .next-btn {
+            background: #00b894;
+            color: white;
+        }
+        
+        .next-btn:disabled {
+            background: #ddd;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .modal-content h2 {
+            color: #00b894;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .modal-content p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .close-btn {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: #00a085;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .matching-game {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+                padding: 15px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">為什麼糞便是排遺，不是排泄物？</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="left-content">
+                <p>排泄是將<span class="highlight">細胞代謝</span>產生的廢物排出體外的過程，如尿素、二氧化碳、水等，主要由腎臟、肺和皮膚進行。</p>
+                <br>
+                <p>排遺則是把<span class="highlight">未被消化吸收</span>的食物殘渣經肛門排出，排遺未被細胞利用過。</p>
+            </div>
+            
+            <div class="right-content">
+                <div class="image-container">
+                    <img src="/images/feces.png" alt="糞便示意圖" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+                </div>
+            </div>
+        </main>
+        
+        <section class="quiz-section">
+            <h2 class="quiz-title">排泄、排遺的定義（配對題）</h2>
+            
+            <div class="matching-game">
+                <div class="terms-column">
+                    <div class="column-title">概念</div>
+                    <div class="term-item" data-term="excretion">排泄</div>
+                    <div class="term-item" data-term="defecation">排遺</div>
+                </div>
+                
+                <div class="definitions-column">
+                    <div class="column-title">定義</div>
+                    <div class="definition-item" data-definition="excretion">將細胞代謝產生的廢物排出體外</div>
+                    <div class="definition-item" data-definition="defecation">將未被消化吸收的食物殘渣排出</div>
+                </div>
+            </div>
+        </section>
+        
+        <nav class="navigation">
+            <a href="8_large_intestine.html" class="nav-btn prev-btn">上一頁</a>
+            <button id="nextBtn" class="nav-btn next-btn" disabled onclick="goToNext()">下一頁</button>
+        </nav>
+    </div>
+    
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2>🎉 恭喜完成！</h2>
+            <p>你已完成所有學習內容，接下來就是練習囉！</p>
+            <button class="close-btn" onclick="closeModal()">確定</button>
+        </div>
+    </div>
+    
+    <script>
+        let selectedTerm = null;
+        let selectedDefinition = null;
+        let matchedPairs = 0;
+        const totalPairs = 2;
+        
+        const correctMatches = {
+            'excretion': 'excretion',
+            'defecation': 'defecation'
+        };
+        
+        // 添加點擊事件監聽器
+        document.querySelectorAll('.term-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('matched')) return;
+                
+                // 清除之前的選擇
+                document.querySelectorAll('.term-item').forEach(t => t.classList.remove('selected'));
+                
+                // 選擇當前項目
+                this.classList.add('selected');
+                selectedTerm = this.dataset.term;
+                
+                checkMatch();
+            });
+        });
+        
+        document.querySelectorAll('.definition-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('matched')) return;
+                
+                // 清除之前的選擇
+                document.querySelectorAll('.definition-item').forEach(d => d.classList.remove('selected'));
+                
+                // 選擇當前項目
+                this.classList.add('selected');
+                selectedDefinition = this.dataset.definition;
+                
+                checkMatch();
+            });
+        });
+        
+        function checkMatch() {
+            if (selectedTerm && selectedDefinition) {
+                if (correctMatches[selectedTerm] === selectedDefinition) {
+                    // 正確配對
+                    const termElement = document.querySelector(`[data-term="${selectedTerm}"]`);
+                    const definitionElement = document.querySelector(`[data-definition="${selectedDefinition}"]`);
+                    
+                    termElement.classList.add('matched');
+                    termElement.classList.remove('selected');
+                    definitionElement.classList.add('matched');
+                    definitionElement.classList.remove('selected');
+                    
+                    matchedPairs++;
+                    
+                    if (matchedPairs === totalPairs) {
+                        setTimeout(() => {
+                            document.getElementById('successModal').style.display = 'block';
+                            document.getElementById('nextBtn').disabled = false;
+                        }, 500);
+                    }
+                } else {
+                    // 錯誤配對，清除選擇
+                    setTimeout(() => {
+                        document.querySelectorAll('.term-item, .definition-item').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                    }, 1000);
+                }
+                
+                selectedTerm = null;
+                selectedDefinition = null;
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+        
+        function goToNext() {
+            if (!document.getElementById('nextBtn').disabled) {
+                window.location.href = '9_exam.html';
+            }
+        }
+        
+        // 點擊模態框外部關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('successModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9921281ce124d5b5',t:'MTc2MTA1MzkyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
