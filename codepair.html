@@ -200,30 +200,21 @@
     </main>
 
     <!-- 導航按鈕 -->
-    <footer class="max-w-7xl mx-auto px-6 py-6">
-        <div class="flex justify-between items-center">
-            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                <span>上一頁</span>
-            </button>
-            
-            <div class="text-center">
-                <div id="progress" class="text-lg font-semibold text-indigo-600 mb-2">進度：0/11</div>
-                <div class="w-64 bg-gray-200 rounded-full h-3">
-                    <div id="progressBar" class="bg-indigo-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
-                </div>
-            </div>
-            
-            <button id="nextBtn" class="bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center space-x-2 cursor-not-allowed" disabled>
-                <span>下一頁</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
-        </div>
-    </footer>
+    <!-- 上一頁 -->
+<a href="home.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center space-x-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+    <span>上一頁</span>
+</a>
+
+<!-- 下一頁 -->
+<a href="digestivetract.html" id="nextBtn" class="bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center space-x-2 cursor-not-allowed">
+    <span>下一頁</span>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+</a>
 
     <script>
         let selectedOrgan = null;
