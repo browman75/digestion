@@ -625,7 +625,7 @@
 
         function nextPage() {
             if (matchedPairs.size === gameData.length) {
-                showMessage('📖 這是下一頁功能，可以連結到下一個學習頁面', 'info');
+                window.location.href = "9_2_exam.html"; // 👈 這裡放要前往的網址;
             } else {
                 showMessage('⚠️ 請先完成所有配對才能前往下一頁！', 'error');
             }
