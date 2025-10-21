@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化器官學習頁面 - 膽汁乳化作用</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.2rem;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            flex-grow: 1;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .content-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        
+        .content-text p {
+            margin-bottom: 15px;
+        }
+        
+        .quiz-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .quiz-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .quiz-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-item.correct {
+            border-color: #48bb78;
+            background-color: #f0fff4;
+        }
+        
+        .quiz-item.incorrect {
+            border-color: #f56565;
+            background-color: #fff5f5;
+        }
+        
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #edf2f7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .quiz-option:hover {
+            background: #e2e8f0;
+        }
+        
+        .quiz-option.selected {
+            background: #bee3f8;
+            border-color: #3182ce;
+        }
+        
+        .quiz-option input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .nav-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-button.prev {
+            background: #718096;
+            color: white;
+        }
+        
+        .nav-button.prev:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.next {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .nav-button.next:hover:not(:disabled) {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .nav-button:disabled {
+            background: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-indicator {
+            text-align: center;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .feedback-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .feedback-message.success {
+            background: #f0fff4;
+            color: #38a169;
+            border: 2px solid #68d391;
+        }
+        
+        .feedback-message.error {
+            background: #fff5f5;
+            color: #e53e3e;
+            border: 2px solid #fc8181;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header, .content-section, .navigation {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content-text {
+                font-size: 1rem;
+            }
+            
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>消化器官學習頁面 - 膽汁乳化作用</h1>
+        </header>
+        
+        <section class="content-section">
+            <div class="content-text">
+                <p>乳化是指原本不容易混合的油和水，在乳化劑的作用下變得均勻分散的現象。生活中像沙拉醬、牛奶、乳液等都是乳化的例子。</p>
+                
+                <p>在人體中，膽汁中的膽鹽能將大油滴分成許多小油滴，讓脂肪表面積變大，脂肪酶更容易作用，幫助脂肪的分解。</p>
+                
+                <p>不過要注意，乳化只是讓油脂更容易被消化，並不是一種真正的消化作用。</p>
+                
+                <p>而且膽汁是由肝臟製造，膽囊只有儲存膽汁的功能而已。</p>
+            </div>
+            
+            <div class="image-container">
+                <img src="/images/bile.jpeg" alt="膽汁乳化作用示意圖" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+            </div>
+            
+            <div class="quiz-section">
+                <div class="quiz-title">📝 學習測驗</div>
+                
+                <div class="quiz-item" data-question="1">
+                    <div class="quiz-question">分泌膽汁的器官：</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="胰臟">
+                            <span>胰臟</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="肝臟">
+                            <span>肝臟</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="膽囊">
+                            <span>膽囊</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="胃">
+                            <span>胃</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="quiz-item" data-question="2">
+                    <div class="quiz-question">儲存膽汁的器官：</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="肝臟">
+                            <span>肝臟</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="膽囊">
+                            <span>膽囊</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="胰臟">
+                            <span>胰臟</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="十二指腸">
+                            <span>十二指腸</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="quiz-item" data-question="3">
+                    <div class="quiz-question">分解脂肪的消化液：</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="膽汁">
+                            <span>膽汁</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="胃液">
+                            <span>胃液</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="胰液">
+                            <span>胰液</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="唾液">
+                            <span>唾液</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="quiz-item" data-question="4">
+                    <div class="quiz-question">乳化脂肪的消化液：</div>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="胰液">
+                            <span>胰液</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="膽汁">
+                            <span>膽汁</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="胃液">
+                            <span>胃液</span>
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="腸液">
+                            <span>腸液</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="feedback-message" id="feedbackMessage"></div>
+            </div>
+        </section>
+        
+        <nav class="navigation">
+            <a href="7_smallintestine.html" class="nav-button prev">← 上一頁</a>
+            <div class="progress-indicator">膽汁乳化作用</div>
+            <button id="nextButton" class="nav-button next" disabled>下一頁 →</button>
+        </nav>
+    </main>
+
+    <script>
+        const correctAnswers = {
+            q1: '肝臟',
+            q2: '膽囊', 
+            q3: '胰液',
+            q4: '膽汁'
+        };
+        
+        const nextButton = document.getElementById('nextButton');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        
+        // 監聽所有選項變化
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionName = this.name;
+                const selectedValue = this.value;
+                const questionItem = this.closest('.quiz-item');
+                
+                // 更新選項樣式
+                questionItem.querySelectorAll('.quiz-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                this.closest('.quiz-option').classList.add('selected');
+                
+                // 檢查答案
+                if (selectedValue === correctAnswers[questionName]) {
+                    questionItem.classList.remove('incorrect');
+                    questionItem.classList.add('correct');
+                } else {
+                    questionItem.classList.remove('correct');
+                    questionItem.classList.add('incorrect');
+                }
+                
+                checkAllAnswers();
+            });
+        });
+        
+        function checkAllAnswers() {
+            let allCorrect = true;
+            let answeredCount = 0;
+            
+            for (let question in correctAnswers) {
+                const selectedOption = document.querySelector(`input[name="${question}"]:checked`);
+                if (selectedOption) {
+                    answeredCount++;
+                    if (selectedOption.value !== correctAnswers[question]) {
+                        allCorrect = false;
+                    }
+                } else {
+                    allCorrect = false;
+                }
+            }
+            
+            // 顯示回饋訊息
+            if (answeredCount === Object.keys(correctAnswers).length) {
+                if (allCorrect) {
+                    feedbackMessage.textContent = '🎉 太棒了！全部答對了！現在可以前往下一頁。';
+                    feedbackMessage.className = 'feedback-message success';
+                    feedbackMessage.style.display = 'block';
+                    nextButton.disabled = false;
+                } else {
+                    feedbackMessage.textContent = '❌ 還有答案需要修正，請檢查紅色框框的題目。';
+                    feedbackMessage.className = 'feedback-message error';
+                    feedbackMessage.style.display = 'block';
+                    nextButton.disabled = true;
+                }
+            } else {
+                feedbackMessage.style.display = 'none';
+                nextButton.disabled = true;
+            }
+        }
+        
+        // 下一頁按鈕點擊事件
+        nextButton.addEventListener('click', function() {
+            if (!this.disabled) {
+                window.open('8_largeintestine.html', '_blank', 'noopener,noreferrer');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991daad8f4286b69',t:'MTc2MTAxNzMzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
