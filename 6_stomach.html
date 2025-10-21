@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化器官學習頁面 - 胃</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 1;
+            margin-bottom: 30px;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section h2 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #4a5568;
+            text-align: justify;
+        }
+
+        .image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stomach-diagram {
+            width: 300px;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .quiz-section h3 {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #4a5568;
+        }
+
+        .question select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .question select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .question.correct select {
+            border-color: #48bb78;
+            background-color: #f0fff4;
+        }
+
+        .question.incorrect select {
+            border-color: #f56565;
+            background-color: #fff5f5;
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            color: #48bb78;
+        }
+
+        .feedback.incorrect {
+            color: #f56565;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button.prev {
+            background: #4299e1;
+            color: white;
+        }
+
+        .nav-button.prev:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.next {
+            background: #48bb78;
+            color: white;
+        }
+
+        .nav-button.next:hover:not(:disabled) {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>消化器官學習頁面</h1>
+        </header>
+
+        <div class="main-content">
+            <div class="content-section">
+                <h2>3 胃</h2>
+                <div class="content-text">
+                    胃位於腹腔的左上方，呈囊狀，可攪拌和暫時儲存食物。胃壁中有胃腺，胃腺所分泌的胃液內含有鹽酸和酵素。鹽酸呈酸性，具殺菌和活化胃中酵素的作用，受活化的酵素可初步分解蛋白質。
+                </div>
+            </div>
+
+            <div class="content-section image-section">
+                <img src="/images/stomach.jpg" alt="胃的解剖圖" class="stomach-diagram" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';" />
+            </div>
+        </div>
+
+        <div class="quiz-section">
+            <h3>📝 測驗題目</h3>
+            
+            <div class="question" data-answer="腹腔的左上方">
+                <label for="q1">胃的位置：</label>
+                <select id="q1">
+                    <option value="">請選擇答案</option>
+                    <option value="腹腔的左上方">腹腔的左上方</option>
+                    <option value="腹腔的右上方">腹腔的右上方</option>
+                    <option value="腹腔的左下方">腹腔的左下方</option>
+                    <option value="胸腔內">胸腔內</option>
+                </select>
+                <div class="feedback"></div>
+            </div>
+
+            <div class="question" data-answer="攪拌和暫時儲存食物">
+                <label for="q2">胃的功能：</label>
+                <select id="q2">
+                    <option value="">請選擇答案</option>
+                    <option value="攪拌和暫時儲存食物">攪拌和暫時儲存食物</option>
+                    <option value="完全消化食物">完全消化食物</option>
+                    <option value="吸收營養">吸收營養</option>
+                    <option value="製造膽汁">製造膽汁</option>
+                </select>
+                <div class="feedback"></div>
+            </div>
+
+            <div class="question" data-answer="分泌胃液，如鹽酸和酵素">
+                <label for="q3">胃腺的功能：</label>
+                <select id="q3">
+                    <option value="">請選擇答案</option>
+                    <option value="分泌胃液，如鹽酸和酵素">分泌胃液，如鹽酸和酵素</option>
+                    <option value="吸收水分">吸收水分</option>
+                    <option value="儲存食物">儲存食物</option>
+                    <option value="過濾血液">過濾血液</option>
+                </select>
+                <div class="feedback"></div>
+            </div>
+
+            <div class="question" data-answer="殺菌和活化胃中酵素">
+                <label for="q4">鹽酸的功能：</label>
+                <select id="q4">
+                    <option value="">請選擇答案</option>
+                    <option value="殺菌和活化胃中酵素">殺菌和活化胃中酵素</option>
+                    <option value="中和胃酸">中和胃酸</option>
+                    <option value="分解脂肪">分解脂肪</option>
+                    <option value="促進吸收">促進吸收</option>
+                </select>
+                <div class="feedback"></div>
+            </div>
+
+            <div class="question" data-answer="初步分解蛋白質">
+                <label for="q5">胃中酵素的功能：</label>
+                <select id="q5">
+                    <option value="">請選擇答案</option>
+                    <option value="初步分解蛋白質">初步分解蛋白質</option>
+                    <option value="分解澱粉">分解澱粉</option>
+                    <option value="分解脂肪">分解脂肪</option>
+                    <option value="合成蛋白質">合成蛋白質</option>
+                </select>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <nav class="navigation">
+            <a href="5_mouth.html" class="nav-button prev">⬅️ 上一頁</a>
+            <div class="progress-indicator">
+                <span id="score">0</span> / 5 題正確
+            </div>
+            <button id="nextBtn" class="nav-button next" disabled>下一頁 ➡️</button>
+        </nav>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll('.question');
+        const nextBtn = document.getElementById('nextBtn');
+        const scoreDisplay = document.getElementById('score');
+        let correctAnswers = 0;
+
+        questions.forEach(question => {
+            const select = question.querySelector('select');
+            const feedback = question.querySelector('.feedback');
+            const correctAnswer = question.dataset.answer;
+
+            select.addEventListener('change', function() {
+                const selectedValue = this.value;
+                
+                // 清除之前的狀態
+                question.classList.remove('correct', 'incorrect');
+                feedback.classList.remove('correct', 'incorrect');
+                
+                if (selectedValue === correctAnswer) {
+                    question.classList.add('correct');
+                    feedback.classList.add('correct');
+                    feedback.textContent = '✅ 正確！';
+                    
+                    // 如果這題之前沒答對過，增加分數
+                    if (!question.dataset.wasCorrect) {
+                        correctAnswers++;
+                        question.dataset.wasCorrect = 'true';
+                    }
+                } else if (selectedValue !== '') {
+                    question.classList.add('incorrect');
+                    feedback.classList.add('incorrect');
+                    feedback.textContent = '❌ 錯誤，請重新選擇';
+                    
+                    // 如果這題之前答對過，現在答錯了，減少分數
+                    if (question.dataset.wasCorrect) {
+                        correctAnswers--;
+                        question.dataset.wasCorrect = 'false';
+                    }
+                } else {
+                    feedback.textContent = '';
+                    if (question.dataset.wasCorrect) {
+                        correctAnswers--;
+                        question.dataset.wasCorrect = 'false';
+                    }
+                }
+                
+                updateScore();
+                checkAllAnswered();
+            });
+        });
+
+        function updateScore() {
+            scoreDisplay.textContent = correctAnswers;
+        }
+
+        function checkAllAnswered() {
+            if (correctAnswers === 5) {
+                nextBtn.disabled = false;
+                nextBtn.style.background = '#48bb78';
+                nextBtn.style.cursor = 'pointer';
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.style.background = '#a0aec0';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        nextBtn.addEventListener('click', function() {
+            if (correctAnswers === 5) {
+                window.open('7_smallintestine.html', '_blank', 'noopener,noreferrer');
+            }
+        });
+
+        // 防止表單提交導致頁面跳轉
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d47b0c05f843f',t:'MTc2MTAxMzI3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
