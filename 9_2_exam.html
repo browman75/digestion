@@ -350,7 +350,7 @@
         }
 
         function sendToGoogleSheet(score) {
-            if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
+            if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbx31hgS79e67gvhzzTMiMk7FOMipBMpPmw6-kB18iFfPVMIJjo9MTbSn0ixNjelqIToqA/exec') {
                 console.warn("尚未設定 Google Apps Script URL，成績不會被記錄。");
                 analysisText.textContent += "\n\n(注意：老師尚未設定成績紀錄網址，本次成績不會被儲存。)";
                 return;
@@ -361,6 +361,7 @@
                 studentSeatNum: document.getElementById('student-seatnum').value,
                 studentName: document.getElementById('student-name').value,
                 score: score,
+                sheetName: 'digestion_exam2' // <-- 指定工作表名稱
             };
 
             fetch(SCRIPT_URL, {
