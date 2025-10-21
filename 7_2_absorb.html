@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化器官學習頁面</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+            min-height: 100%;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c5282;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 1;
+            margin-bottom: 30px;
+        }
+        
+        .left-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 3px solid #4299e1;
+        }
+        
+        .left-panel h2 {
+            color: #2c5282;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 5px solid #4299e1;
+            padding-left: 15px;
+        }
+        
+        .left-panel p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2d3748;
+            text-align: justify;
+        }
+        
+        .right-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 3px solid #ed64a6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .right-panel img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        
+        .quiz-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 3px solid #38a169;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-section h3 {
+            color: #2c5282;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .fill-blank {
+            font-size: 1.3rem;
+            line-height: 2;
+            margin-bottom: 15px;
+        }
+        
+        .blank {
+            display: inline-block;
+            min-width: 120px;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: 2px solid #4299e1;
+            border-radius: 25px;
+            background: #f7fafc;
+            font-weight: bold;
+            color: #2c5282;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .blank:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        
+        .blank.filled {
+            background: #c6f6d5;
+            border-color: #38a169;
+        }
+        
+        .blank.correct {
+            background: #9ae6b4;
+            border-color: #38a169;
+            animation: bounce 0.5s ease;
+        }
+        
+        .blank.incorrect {
+            background: #fed7d7;
+            border-color: #e53e3e;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            80% { transform: translateY(-5px); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .option {
+            padding: 12px 20px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .option:hover {
+            background: #3182ce;
+            transform: scale(1.05);
+        }
+        
+        .option.used {
+            background: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .prev-btn {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .prev-btn:hover {
+            background: #3182ce;
+            transform: translateX(-5px);
+        }
+        
+        .next-btn {
+            background: #38a169;
+            color: white;
+        }
+        
+        .next-btn:hover:not(.disabled) {
+            background: #2f855a;
+            transform: translateX(5px);
+        }
+        
+        .next-btn.disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .success-message {
+            text-align: center;
+            color: #38a169;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔬 消化器官學習頁面</h1>
+        </header>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <h2>▌小腸絨毛的功能</h2>
+                <p>
+                    小腸內壁有很多環狀皺褶和位於皺褶上像指狀的突起，這些指狀的突起稱為絨毛，可以增加養分及水分吸收的表面積。絨毛內含有微血管網，可將所吸收的養分及水分送至全身，供細胞利用。
+                </p>
+            </div>
+            
+            <div class="right-panel">
+                <img src="/images/absorb.jpg" alt="小腸絨毛結構圖" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+            </div>
+        </div>
+        
+        <div class="quiz-section">
+            <h3>📝 填空練習</h3>
+            <p style="text-align: center; color: #4a5568; font-size: 1.1rem; margin-bottom: 20px;">
+                💡 <strong>操作說明：</strong>先點選空格，再點選答案選項
+            </p>
+            
+            <div class="fill-blank">
+                小腸內必有許多「<span class="blank" data-answer="環狀皺褶" onclick="selectBlank(this)">_____</span>」，皺褶上像指狀突起的「<span class="blank" data-answer="絨毛" onclick="selectBlank(this)">_____</span>」，可以增加養分及水分吸收的「<span class="blank" data-answer="表面積" onclick="selectBlank(this)">_____</span>」。
+            </div>
+            
+            <div class="fill-blank">
+                主要吸收養分和水分的器官是：「<span class="blank" data-answer="小腸" onclick="selectBlank(this)">_____</span>」
+            </div>
+            
+            <div class="options">
+                <button class="option" onclick="fillBlank('平滑表面')">平滑表面</button>
+                <button class="option" onclick="fillBlank('環狀皺褶')">環狀皺褶</button>
+                <button class="option" onclick="fillBlank('絨毛')">絨毛</button>
+                <button class="option" onclick="fillBlank('纖毛')">纖毛</button>
+                <button class="option" onclick="fillBlank('表面積')">表面積</button>
+                <button class="option" onclick="fillBlank('體積')">體積</button>
+                <button class="option" onclick="fillBlank('小腸')">小腸</button>
+                <button class="option" onclick="fillBlank('大腸')">大腸</button>
+                <button class="option" onclick="fillBlank('胃')">胃</button>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                🎉 太棒了！全部答對了！
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" style="background: #ed8936; color: white;" onclick="resetQuiz()">
+                    🔄 重新作答
+                </button>
+            </div>
+        </div>
+        
+        <nav class="navigation">
+            <a href="7_1_bile.html" class="nav-btn prev-btn">⬅️ 上一頁</a>
+            <a href="#" class="nav-btn next-btn disabled" id="nextBtn" onclick="goToNext(event)">下一頁 ➡️</a>
+        </nav>
+    </div>
+
+    <script>
+        let selectedBlank = null;
+        let correctAnswers = 0;
+        const totalQuestions = 4;
+
+        function selectBlank(blank) {
+            // Remove previous selection
+            if (selectedBlank) {
+                selectedBlank.style.background = selectedBlank.classList.contains('filled') ? '#c6f6d5' : '#f7fafc';
+            }
+            
+            // Select new blank
+            selectedBlank = blank;
+            if (!blank.classList.contains('filled')) {
+                blank.style.background = '#bee3f8';
+            }
+        }
+
+        function fillBlank(answer) {
+            if (!selectedBlank) {
+                // Flash all empty blanks to indicate selection needed
+                const blanks = document.querySelectorAll('.blank:not(.filled)');
+                blanks.forEach(blank => {
+                    blank.style.background = '#fed7d7';
+                    setTimeout(() => {
+                        blank.style.background = '#f7fafc';
+                    }, 300);
+                });
+                return;
+            }
+
+            if (selectedBlank.classList.contains('filled')) {
+                return;
+            }
+
+            const correctAnswer = selectedBlank.getAttribute('data-answer');
+            selectedBlank.textContent = answer;
+            selectedBlank.classList.add('filled');
+
+            // Find and disable the used option
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                if (option.textContent === answer && !option.classList.contains('used')) {
+                    option.classList.add('used');
+                    option.disabled = true;
+                }
+            });
+
+            if (answer === correctAnswer) {
+                selectedBlank.classList.add('correct');
+                correctAnswers++;
+            } else {
+                selectedBlank.classList.add('incorrect');
+                // Allow retry by removing filled class after animation
+                setTimeout(() => {
+                    selectedBlank.classList.remove('filled', 'incorrect');
+                    selectedBlank.textContent = '_____';
+                    // Re-enable the option
+                    options.forEach(option => {
+                        if (option.textContent === answer) {
+                            option.classList.remove('used');
+                            option.disabled = false;
+                        }
+                    });
+                }, 1000);
+            }
+
+            selectedBlank = null;
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            if (correctAnswers === totalQuestions) {
+                const successMessage = document.getElementById('successMessage');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                successMessage.classList.add('show');
+                nextBtn.classList.remove('disabled');
+                nextBtn.href = 'https://browman75.github.io/digestion_small_intestine/';
+            }
+        }
+
+        function goToNext(event) {
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn.classList.contains('disabled')) {
+                event.preventDefault();
+                // Flash the button to indicate it's disabled
+                nextBtn.style.background = '#fed7d7';
+                setTimeout(() => {
+                    nextBtn.style.background = '#a0aec0';
+                }, 300);
+            }
+        }
+
+        function resetQuiz() {
+            // Reset all blanks
+            const blanks = document.querySelectorAll('.blank');
+            blanks.forEach(blank => {
+                blank.textContent = '_____';
+                blank.classList.remove('filled', 'correct', 'incorrect');
+                blank.style.background = '#f7fafc';
+            });
+
+            // Reset all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('used');
+                option.disabled = false;
+            });
+
+            // Reset counters and UI
+            correctAnswers = 0;
+            selectedBlank = null;
+            
+            const successMessage = document.getElementById('successMessage');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            successMessage.classList.remove('show');
+            nextBtn.classList.add('disabled');
+            nextBtn.href = '#';
+
+            // Select first blank again
+            const firstBlank = document.querySelector('.blank');
+            selectBlank(firstBlank);
+        }
+
+        // Initialize first blank selection
+        window.addEventListener('load', () => {
+            const firstBlank = document.querySelector('.blank');
+            selectBlank(firstBlank);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991dc19451804a91',t:'MTc2MTAxODI2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
