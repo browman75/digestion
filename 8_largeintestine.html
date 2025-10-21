@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化器官學習頁面</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+            min-height: 100%;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c5282;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-grow: 1;
+        }
+        
+        .text-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #4299e1;
+        }
+        
+        .text-section h2 {
+            color: #2c5282;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #4299e1;
+            padding-bottom: 10px;
+        }
+        
+        .text-section p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #2d3748;
+            text-align: justify;
+        }
+        
+        .image-section {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #ed64a6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-section img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .quiz-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #48bb78;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-section h3 {
+            color: #2c5282;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 15px;
+            border-left: 5px solid #4299e1;
+        }
+        
+        .question h4 {
+            color: #2c5282;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .option:hover {
+            background: #edf2f7;
+            border-color: #4299e1;
+        }
+        
+        .option input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+        }
+        
+        .option.correct {
+            background: #c6f6d5;
+            border-color: #48bb78;
+        }
+        
+        .option.incorrect {
+            background: #fed7d7;
+            border-color: #f56565;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+        
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #f56565;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .nav-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .prev-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .prev-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .next-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .next-button:hover:not(.disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .next-button.disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .progress-indicator {
+            text-align: center;
+            color: #4a5568;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>消化器官學習頁面</h1>
+        </header>
+        
+        <main class="main-content">
+            <section class="text-section">
+                <h2>5 大腸及肛門</h2>
+                <p>大腸比小腸粗短，圍繞在小腸的外側。大腸能吸收剩餘的水分，將最終不能被吸收的食物殘渣與細菌、剝落的腸壁細胞混合，最後形成糞便經由肛門排出，稱為排遺。</p>
+            </section>
+            
+            <section class="image-section">
+                <img src="/images/smallintestine.jpg" alt="大腸解剖圖" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+            </section>
+        </main>
+        
+        <section class="quiz-section">
+            <h3>📝 學習測驗</h3>
+            
+            <div class="question" id="question1">
+                <h4>1. 大腸的功能包括：（可複選）</h4>
+                <div class="options">
+                    <label class="option" data-correct="true">
+                        <input type="checkbox" name="q1" value="absorb-water">
+                        吸收剩餘的水分
+                    </label>
+                    <label class="option" data-correct="true">
+                        <input type="checkbox" name="q1" value="form-feces">
+                        形成糞便
+                    </label>
+                    <label class="option" data-correct="false">
+                        <input type="checkbox" name="q1" value="absorb-most-water">
+                        吸收大部分的水分
+                    </label>
+                    <label class="option" data-correct="false">
+                        <input type="checkbox" name="q1" value="form-food">
+                        形成食物
+                    </label>
+                </div>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+            
+            <div class="question" id="question2">
+                <h4>2. 糞便又稱為：</h4>
+                <div class="options">
+                    <label class="option" data-correct="true">
+                        <input type="checkbox" name="q2" value="excretion">
+                        排遺
+                    </label>
+                    <label class="option" data-correct="false">
+                        <input type="checkbox" name="q2" value="waste">
+                        排泄物
+                    </label>
+                    <label class="option" data-correct="false">
+                        <input type="checkbox" name="q2" value="food">
+                        食物
+                    </label>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+        </section>
+        
+        <nav class="navigation">
+            <a href="7_2_absorb.html" class="nav-button prev-button">⬅️ 上一頁</a>
+            <div class="progress-indicator">
+                <span id="progress-text">請完成測驗以繼續</span>
+            </div>
+            <a href="#" class="nav-button next-button disabled" id="next-button">下一頁 ➡️</a>
+        </nav>
+    </div>
+
+    <script>
+        let question1Correct = false;
+        let question2Correct = false;
+        
+        function checkAnswers() {
+            // Check Question 1
+            const q1Checkboxes = document.querySelectorAll('input[name="q1"]');
+            const q1CorrectAnswers = ['absorb-water', 'form-feces'];
+            const q1SelectedAnswers = Array.from(q1Checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            
+            question1Correct = q1CorrectAnswers.length === q1SelectedAnswers.length &&
+                             q1CorrectAnswers.every(answer => q1SelectedAnswers.includes(answer));
+            
+            // Check Question 2
+            const q2Checkboxes = document.querySelectorAll('input[name="q2"]');
+            const q2SelectedAnswers = Array.from(q2Checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            
+            question2Correct = q2SelectedAnswers.length === 1 && q2SelectedAnswers[0] === 'excretion';
+            
+            // Update UI
+            updateQuestionFeedback(1, question1Correct);
+            updateQuestionFeedback(2, question2Correct);
+            updateNavigationButton();
+        }
+        
+        function updateQuestionFeedback(questionNum, isCorrect) {
+            const question = document.getElementById(`question${questionNum}`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const options = question.querySelectorAll('.option');
+            
+            // Reset option styles
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                const checkbox = option.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    const isOptionCorrect = option.dataset.correct === 'true';
+                    option.classList.add(isOptionCorrect ? 'correct' : 'incorrect');
+                }
+            });
+            
+            // Show feedback
+            feedback.style.display = 'block';
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.textContent = isCorrect ? '✅ 答對了！' : '❌ 請重新檢查答案';
+        }
+        
+        function updateNavigationButton() {
+            const nextButton = document.getElementById('next-button');
+            const progressText = document.getElementById('progress-text');
+            
+            if (question1Correct && question2Correct) {
+                nextButton.classList.remove('disabled');
+                nextButton.href = 'https://browman75.github.io/digestion_nutrient_game/';
+                progressText.textContent = '🎉 測驗完成！可以前往下一頁';
+                progressText.style.color = '#22543d';
+            } else {
+                nextButton.classList.add('disabled');
+                nextButton.href = '#';
+                progressText.textContent = '請完成測驗以繼續';
+                progressText.style.color = '#4a5568';
+            }
+        }
+        
+        // Add event listeners to all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // For single-choice questions (Q2), uncheck other options
+                if (this.name === 'q2') {
+                    document.querySelectorAll('input[name="q2"]').forEach(cb => {
+                        if (cb !== this) cb.checked = false;
+                    });
+                }
+                checkAnswers();
+            });
+        });
+        
+        // Prevent navigation when disabled
+        document.getElementById('next-button').addEventListener('click', function(e) {
+            if (this.classList.contains('disabled')) {
+                e.preventDefault();
+                alert('請先完成所有測驗題目！');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991dc980a232841e',t:'MTc2MTAxODU4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
