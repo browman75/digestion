@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化器官學習頁面 - 口腔</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', '微軟正黑體', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+            min-height: 100%;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-left: 5px solid #4fc3f7;
+            padding-left: 15px;
+        }
+
+        .content-layout {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+
+        .text-content {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #4fc3f7;
+            font-size: 20px;
+        }
+
+        .image-container {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 15px;
+        }
+
+        .mouth-image {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border: 3px solid #4fc3f7;
+            border-radius: 15px;
+        }
+
+        .quiz-section {
+            background: #e8f5e8;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #4caf50;
+        }
+
+        .quiz-title {
+            font-size: 24px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .quiz-item label {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .quiz-item select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: white;
+            cursor: pointer;
+        }
+
+        .quiz-item select:focus {
+            outline: none;
+            border-color: #4fc3f7;
+        }
+
+        .quiz-item.correct {
+            border-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .quiz-item.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #ffcdd2;
+            color: #c62828;
+            display: block;
+        }
+
+        .check-button {
+            background: #4fc3f7;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 20px 10px 20px 0;
+            transition: background 0.3s;
+        }
+
+        .check-button:hover {
+            background: #29b6f6;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+            background: #f5f5f5;
+        }
+
+        .nav-button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .prev-button {
+            background: #ff9800;
+            color: white;
+        }
+
+        .prev-button:hover {
+            background: #f57c00;
+        }
+
+        .next-button {
+            background: #4caf50;
+            color: white;
+        }
+
+        .next-button:hover {
+            background: #388e3c;
+        }
+
+        .next-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .success-message {
+            background: #c8e6c9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .modal-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .modal-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border: 3px solid #4fc3f7;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .close-button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .close-button:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>消化器官學習頁面</h1>
+        </header>
+
+        <main class="content">
+            <h2 class="section-title">1. 口腔</h2>
+            
+            <div class="content-layout">
+                <div class="text-content">
+                    口腔中的牙齒可咬碎並咀嚼食物，唾腺會分泌唾液，唾液中的酵素可初步分解醣類（澱粉），而舌頭可幫助食物和唾液混合，以利吞嚥。
+                </div>
+
+                <div class="image-container">
+                    <img src="/images/mouth2.png" alt="口腔構造圖" class="mouth-image" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+                </div>
+            </div>
+
+            <div class="quiz-section">
+                <h3 class="quiz-title">📝 口腔的功能</h3>
+                
+                <div class="quiz-item" id="enzyme">
+                    <label for="enzyme-select">唾液中的酵素：</label>
+                    <select id="enzyme-select">
+                        <option value="">請選擇唾液中酵素的功能...</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="幫助吞嚥">幫助吞嚥</option>
+                        <option value="初步分解醣類（澱粉）">初步分解醣類（澱粉）</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="quiz-item" id="teeth">
+                    <label for="teeth-select">牙齒：</label>
+                    <select id="teeth-select">
+                        <option value="">請選擇牙齒的功能...</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="幫助吞嚥">幫助吞嚥</option>
+                        <option value="分解醣類">分解醣類</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="quiz-item" id="glands">
+                    <label for="glands-select">唾腺：</label>
+                    <select id="glands-select">
+                        <option value="">請選擇唾腺的功能...</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="幫助吞嚥">幫助吞嚥</option>
+                        <option value="分解醣類">分解醣類</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="quiz-item" id="tongue">
+                    <label for="tongue-select">舌頭：</label>
+                    <select id="tongue-select">
+                        <option value="">請選擇舌頭的功能...</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="幫助食物和唾液混合，以利吞嚥">幫助食物和唾液混合，以利吞嚥</option>
+                        <option value="分解醣類">分解醣類</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
+                <button class="check-button" onclick="checkAnswers()">檢查答案</button>
+                
+                <div class="success-message" id="success-message">
+                    🎉 太棒了！所有答案都正確，現在可以前往下一頁了！
+                </div>
+            </div>
+        </main>
+
+        <nav class="navigation">
+            <a href="4_digestivetract.html" class="nav-button prev-button">← 上一頁</a>
+            <div class="progress-indicator">第 2 頁，共 7 頁</div>
+            <button class="nav-button next-button" id="next-button" onclick="goToNext()" disabled>下一頁 →</button>
+        </nav>
+    </div>
+
+    <!-- 彈出視窗 -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">🎯 唾腺體驗活動</h3>
+            <div class="modal-text">
+                請試看看要吞口水，就能從唾腺擠出口水，主要在舌頭下方，再實際兩頰內縮吞口水，就能從兩頰擠出口水，再想像上顎用力，舌根用力，再吞口水，就能從上顎後方擠出口水。
+            </div>
+            <img src="/images/mouth2.png" alt="口腔構造圖" class="modal-image" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+            <br>
+            <button class="close-button" onclick="closeModal()">關閉</button>
+        </div>
+    </div>
+
+    <script>
+        let allCorrect = false;
+
+        const correctAnswers = {
+            teeth: '咬碎並咀嚼食物',
+            glands: '分泌唾液',
+            enzyme: '初步分解醣類（澱粉）',
+            tongue: '幫助食物和唾液混合，以利吞嚥'
+        };
+
+        function checkAnswers() {
+            let correctCount = 0;
+            const totalQuestions = 4;
+
+            // 檢查每個答案
+            Object.keys(correctAnswers).forEach(key => {
+                const select = document.getElementById(key + '-select');
+                const quizItem = document.getElementById(key);
+                const feedback = quizItem.querySelector('.feedback');
+                const userAnswer = select.value;
+
+                // 檢查答案是否正確
+                const isCorrect = userAnswer === correctAnswers[key];
+
+                if (isCorrect) {
+                    quizItem.classList.remove('incorrect');
+                    quizItem.classList.add('correct');
+                    feedback.className = 'feedback correct';
+                    feedback.textContent = '✓ 正確！';
+                    correctCount++;
+                } else {
+                    quizItem.classList.remove('correct');
+                    quizItem.classList.add('incorrect');
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = '✗ 請重新選擇...';
+                }
+            });
+
+            // 檢查是否全部正確
+            if (correctCount === totalQuestions) {
+                allCorrect = true;
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('next-button').disabled = false;
+                document.getElementById('next-button').style.background = '#4caf50';
+                document.getElementById('next-button').style.cursor = 'pointer';
+                
+                // 顯示彈出視窗
+                showModal();
+            } else {
+                allCorrect = false;
+                document.getElementById('success-message').style.display = 'none';
+                document.getElementById('next-button').disabled = true;
+                document.getElementById('next-button').style.background = '#ccc';
+                document.getElementById('next-button').style.cursor = 'not-allowed';
+            }
+        }
+
+        function goToNext() {
+            if (allCorrect) {
+                window.open('6_esophagus.html', '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        function showModal() {
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        // 監聽選擇變化，重置狀態
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                const quizItem = this.closest('.quiz-item');
+                const feedback = quizItem.querySelector('.feedback');
+                quizItem.classList.remove('correct', 'incorrect');
+                feedback.style.display = 'none';
+                
+                // 重置成功訊息和下一頁按鈕
+                document.getElementById('success-message').style.display = 'none';
+                document.getElementById('next-button').disabled = true;
+                document.getElementById('next-button').style.background = '#ccc';
+                allCorrect = false;
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d2a7270ac844e',t:'MTc2MTAxMjA3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
