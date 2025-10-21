@@ -323,8 +323,20 @@
                 </div>
             </div>
 
+            <h2 class="section-title">2. 咽及食道</h2>
+            
+            <div class="content-layout">
+                <div class="text-content">
+                    咽可控制食物進入食道；食道呈管狀，藉著管壁的運動，能推動食物進入胃中。
+                </div>
+
+                <div class="image-container">
+                    <img src="/images/esophagus.png" alt="咽及食道構造圖" class="mouth-image" onerror="this.src=''; this.alt='圖片載入失敗'; this.style.display='none';">
+                </div>
+            </div>
+
             <div class="quiz-section">
-                <h3 class="quiz-title">📝 口腔的功能</h3>
+                <h3 class="quiz-title">📝 消化器官的功能</h3>
                 
                 <div class="quiz-item" id="enzyme">
                     <label for="enzyme-select">唾液中的酵素：</label>
@@ -374,6 +386,30 @@
                     <div class="feedback"></div>
                 </div>
 
+                <div class="quiz-item" id="pharynx">
+                    <label for="pharynx-select">咽：</label>
+                    <select id="pharynx-select">
+                        <option value="">請選擇咽的功能...</option>
+                        <option value="控制食物進入食道">控制食物進入食道</option>
+                        <option value="推動食物進入胃中">推動食物進入胃中</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="quiz-item" id="esophagus">
+                    <label for="esophagus-select">食道：</label>
+                    <select id="esophagus-select">
+                        <option value="">請選擇食道的功能...</option>
+                        <option value="控制食物進入食道">控制食物進入食道</option>
+                        <option value="推動食物進入胃中">推動食物進入胃中</option>
+                        <option value="分泌唾液">分泌唾液</option>
+                        <option value="咬碎並咀嚼食物">咬碎並咀嚼食物</option>
+                    </select>
+                    <div class="feedback"></div>
+                </div>
+
                 <button class="check-button" onclick="checkAnswers()">檢查答案</button>
                 
                 <div class="success-message" id="success-message">
@@ -409,12 +445,14 @@
             teeth: '咬碎並咀嚼食物',
             glands: '分泌唾液',
             enzyme: '初步分解醣類（澱粉）',
-            tongue: '幫助食物和唾液混合，以利吞嚥'
+            tongue: '幫助食物和唾液混合，以利吞嚥',
+            pharynx: '控制食物進入食道',
+            esophagus: '推動食物進入胃中'
         };
 
         function checkAnswers() {
             let correctCount = 0;
-            const totalQuestions = 4;
+            const totalQuestions = 6;
 
             // 檢查每個答案
             Object.keys(correctAnswers).forEach(key => {
@@ -489,5 +527,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d2a7270ac844e',t:'MTc2MTAxMjA3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d3472814fa9cb',t:'MTc2MTAxMjQ4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
