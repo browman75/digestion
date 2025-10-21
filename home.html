@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消化系統學習入口</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: #FFC72C;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .image-button {
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            margin: 2rem 0;
+            display: inline-block;
+        }
+
+        .image-button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .image-button:active {
+            transform: scale(0.95);
+        }
+
+        .image-placeholder {
+            width: 200px;
+            height: 150px;
+            background: rgba(255,255,255,0.9);
+            border: 3px dashed #666;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .image-placeholder p {
+            margin: 0.2rem 0;
+        }
+
+        .image-placeholder p:first-child {
+            font-size: 2rem;
+        }
+
+        .start-text {
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1 class="title">消化系統探索之旅</h1>
+        
+        <p class="subtitle">
+            歡迎來到人體消化系統的奇妙世界！<br>
+            從口腔到腸道，一起探索食物在體內的神奇旅程
+        </p>
+
+        <div class="image-button" onclick="startLearning()" role="button" tabindex="0" aria-label="開始學習消化系統">
+            <div class="image-placeholder">
+                <p>🖼️</p>
+                <p>請放置嘴巴圖片</p>
+                <p>(200x150px)</p>
+            </div>
+        </div>
+
+        <p class="start-text">👆 點擊圖片開始學習！</p>
+
+
+    </main>
+
+    <script>
+        function startLearning() {
+            // 開啟新視窗到學習頁面
+            window.open('https://example.com/digestive-system-learning', '_blank', 'noopener,noreferrer');
+        }
+
+        // 添加鍵盤支援
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                startLearning();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991ca4c7408ca9cb',t:'MTc2MTAwNjU5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
