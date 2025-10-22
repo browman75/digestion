@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖</title>
+    <title>器官拼圖 (自由移動版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -62,6 +62,7 @@
             background-position: center;
             border: 2px dashed #ccc;
             border-radius: 10px;
+            overflow: hidden; /* Important for positioning */
         }
 
         #pieces-bank {
@@ -90,11 +91,15 @@
             align-content: flex-start;
         }
 
+        .draggable {
+            cursor: grab;
+            transition: transform 0.2s;
+            touch-action: none; /* For better touch interaction */
+        }
+
         .draggable-organ {
             height: auto;
             max-width: 100px;
-            cursor: grab;
-            transition: transform 0.2s;
         }
 
         .draggable-label {
@@ -102,17 +107,21 @@
             background-color: #fff;
             border: 2px solid var(--accent-color);
             border-radius: 8px;
-            cursor: grab;
             font-size: 1.1em;
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
         }
         
-        .draggable-organ:active, .draggable-label:active {
+        .dragging {
             cursor: grabbing;
             transform: scale(1.1);
             z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .on-board {
+            position: absolute;
         }
 
         .drop-zone {
@@ -123,6 +132,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 1; /* Drop zones below pieces */
         }
 
         .drop-zone.hover {
@@ -154,7 +164,6 @@
         #drop-small-intestine-label { top: 68%; left: 20%; width: 12%; height: 6%; }
         #drop-large-intestine-label { top: 85%; left: 30%; width: 15%; height: 6%; }
 
-
         .controls {
             width: 95%;
             max-width: 1200px;
@@ -184,14 +193,6 @@
             text-decoration: none;
         }
 
-        .nav-button:hover, #check-btn:hover {
-            opacity: 0.9;
-        }
-        
-        .nav-button:active, #check-btn:active {
-            transform: scale(0.98);
-        }
-
         #next-page-btn.disabled {
             background-color: #ccc;
             cursor: not-allowed;
@@ -202,51 +203,18 @@
 <body>
 
     <h1>器官拼圖</h1>
-    <p>請將器官的圖示和器官的名稱拉到對的位置</p>
+    <p>請將器官的圖示和器官的名稱拖到畫面上，並放置到正確的位置</p>
 
     <div class="game-container">
         <div id="puzzle-area">
-            <div class="drop-zone" id="drop-liver-img" data-correct-id="drag-liver-img"></div>
-            <div class="drop-zone" id="drop-gallbladder-img" data-correct-id="drag-gallbladder-img"></div>
-            <div class="drop-zone" id="drop-stomach-img" data-correct-id="drag-stomach-img"></div>
-            <div class="drop-zone" id="drop-pancreas-img" data-correct-id="drag-pancreas-img"></div>
-            <div class="drop-zone" id="drop-large-intestine-img" data-correct-id="drag-large-intestine-img"></div>
-            <div class="drop-zone" id="drop-small-intestine-img" data-correct-id="drag-small-intestine-img"></div>
-
-            <div class="drop-zone" id="drop-mouth-label" data-correct-id="drag-mouth-label"></div>
-            <div class="drop-zone" id="drop-pharynx-label" data-correct-id="drag-pharynx-label"></div>
-            <div class="drop-zone" id="drop-esophagus-label" data-correct-id="drag-esophagus-label"></div>
-            <div class="drop-zone" id="drop-liver-label" data-correct-id="drag-liver-label"></div>
-            <div class="drop-zone" id="drop-gallbladder-label" data-correct-id="drag-gallbladder-label"></div>
-            <div class="drop-zone" id="drop-stomach-label" data-correct-id="drag-stomach-label"></div>
-            <div class="drop-zone" id="drop-pancreas-label" data-correct-id="drag-pancreas-label"></div>
-            <div class="drop-zone" id="drop-small-intestine-label" data-correct-id="drag-small-intestine-label"></div>
-            <div class="drop-zone" id="drop-large-intestine-label" data-correct-id="drag-large-intestine-label"></div>
-        </div>
+            </div>
 
         <div id="pieces-bank">
             <h3>器官圖示</h3>
-            <div id="organ-pieces">
-                <img src="https://storage.googleapis.com/gemini-prod/images/liver.png" class="draggable-organ" id="drag-liver-img" draggable="true">
-                <img src="https://storage.googleapis.com/gemini-prod/images/gallbladder.png" class="draggable-organ" id="drag-gallbladder-img" draggable="true">
-                <img src="https://storage.googleapis.com/gemini-prod/images/stomach.png" class="draggable-organ" id="drag-stomach-img" draggable="true">
-                <img src="https://storage.googleapis.com/gemini-prod/images/pancreas.png" class="draggable-organ" id="drag-pancreas-img" draggable="true">
-                <img src="https://storage.googleapis.com/gemini-prod/images/large_intestine.png" class="draggable-organ" id="drag-large-intestine-img" draggable="true">
-                <img src="https://storage.googleapis.com/gemini-prod/images/small_intestine.png" class="draggable-organ" id="drag-small-intestine-img" draggable="true">
-            </div>
+            <div id="organ-pieces"></div>
             <hr>
             <h3>器官名稱</h3>
-            <div id="label-pieces">
-                <div class="draggable-label" id="drag-mouth-label" draggable="true">口腔</div>
-                <div class="draggable-label" id="drag-pharynx-label" draggable="true">咽</div>
-                <div class="draggable-label" id="drag-esophagus-label" draggable="true">食道</div>
-                <div class="draggable-label" id="drag-liver-label" draggable="true">肝</div>
-                <div class="draggable-label" id="drag-gallbladder-label" draggable="true">膽</div>
-                <div class="draggable-label" id="drag-stomach-label" draggable="true">胃</div>
-                <div class="draggable-label" id="drag-pancreas-label" draggable="true">胰臟</div>
-                <div class="draggable-label" id="drag-small-intestine-label" draggable="true">小腸</div>
-                <div class="draggable-label" id="drag-large-intestine-label" draggable="true">大腸與肛門</div>
-            </div>
+            <div id="label-pieces"></div>
         </div>
     </div>
 
@@ -258,99 +226,212 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const draggables = document.querySelectorAll('.draggable-organ, .draggable-label');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const checkBtn = document.getElementById('check-btn');
-            const nextPageBtn = document.getElementById('next-page-btn');
+            const puzzleArea = document.getElementById('puzzle-area');
             const organPiecesContainer = document.getElementById('organ-pieces');
             const labelPiecesContainer = document.getElementById('label-pieces');
+            const checkBtn = document.getElementById('check-btn');
+            const nextPageBtn = document.getElementById('next-page-btn');
 
-            // --- Drag and Drop Logic ---
+            const pieces = [
+                { type: 'organ', id: 'liver-img', src: 'https://storage.googleapis.com/gemini-prod/images/liver.png' },
+                { type: 'organ', id: 'gallbladder-img', src: 'https://storage.googleapis.com/gemini-prod/images/gallbladder.png' },
+                { type: 'organ', id: 'stomach-img', src: 'https://storage.googleapis.com/gemini-prod/images/stomach.png' },
+                { type: 'organ', id: 'pancreas-img', src: 'https://storage.googleapis.com/gemini-prod/images/pancreas.png' },
+                { type: 'organ', id: 'large-intestine-img', src: 'https://storage.googleapis.com/gemini-prod/images/large_intestine.png' },
+                { type: 'organ', id: 'small-intestine-img', src: 'https://storage.googleapis.com/gemini-prod/images/small_intestine.png' },
+                { type: 'label', id: 'mouth-label', text: '口腔' },
+                { type: 'label', id: 'pharynx-label', text: '咽' },
+                { type: 'label', id: 'esophagus-label', text: '食道' },
+                { type: 'label', id: 'liver-label', text: '肝' },
+                { type: 'label', id: 'gallbladder-label', text: '膽' },
+                { type: 'label', id: 'stomach-label', text: '胃' },
+                { type: 'label', id: 'pancreas-label', text: '胰臟' },
+                { type: 'label', id: 'small-intestine-label', text: '小腸' },
+                { type: 'label', id: 'large-intestine-label', text: '大腸與肛門' }
+            ];
 
-            draggables.forEach(draggable => {
-                // Store original parent
-                draggable.dataset.originalParent = draggable.parentElement.id;
+            const dropZoneData = [
+                { id: 'drop-liver-img' }, { id: 'drop-gallbladder-img' }, { id: 'drop-stomach-img' }, { id: 'drop-pancreas-img' },
+                { id: 'drop-large-intestine-img' }, { id: 'drop-small-intestine-img' }, { id: 'drop-mouth-label' }, { id: 'drop-pharynx-label' },
+                { id: 'drop-esophagus-label' }, { id: 'drop-liver-label' }, { id: 'drop-gallbladder-label' }, { id: 'drop-stomach-label' },
+                { id: 'drop-pancreas-label' }, { id: 'drop-small-intestine-label' }, { id: 'drop-large-intestine-label' }
+            ];
 
-                draggable.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', e.target.id);
-                    setTimeout(() => {
-                        e.target.style.visibility = 'hidden';
-                    }, 0);
-                });
-
-                draggable.addEventListener('dragend', (e) => {
-                    e.target.style.visibility = 'visible';
-                });
+            // Create and place pieces
+            pieces.forEach(p => {
+                let elem;
+                if (p.type === 'organ') {
+                    elem = document.createElement('img');
+                    elem.src = p.src;
+                    elem.classList.add('draggable-organ');
+                    organPiecesContainer.appendChild(elem);
+                } else {
+                    elem = document.createElement('div');
+                    elem.textContent = p.text;
+                    elem.classList.add('draggable-label');
+                    labelPiecesContainer.appendChild(elem);
+                }
+                elem.id = `drag-${p.id}`;
+                elem.classList.add('draggable');
+                elem.dataset.originalParent = elem.parentElement.id;
             });
 
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', (e) => {
+            // Create and place drop zones
+            dropZoneData.forEach(dz => {
+                const zone = document.createElement('div');
+                zone.id = dz.id;
+                zone.classList.add('drop-zone');
+                zone.dataset.correctId = dz.id.replace('drop-', 'drag-');
+                puzzleArea.appendChild(zone);
+            });
+            
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            // Drag and Drop Logic for Free Movement
+            draggables.forEach(draggable => {
+                let offsetX, offsetY;
+
+                const startDrag = (e) => {
+                    const event = e.touches ? e.touches[0] : e;
+                    draggable.classList.add('dragging');
+                    
+                    const rect = draggable.getBoundingClientRect();
+                    offsetX = event.clientX - rect.left;
+                    offsetY = event.clientY - rect.top;
+
+                    // Move to puzzle area if it's not already there
+                    if (draggable.parentElement.id !== 'puzzle-area') {
+                         const puzzleRect = puzzleArea.getBoundingClientRect();
+                         const bankRect = draggable.parentElement.getBoundingClientRect();
+                         // Calculate position relative to puzzle area
+                         const initialLeft = bankRect.left - puzzleRect.left + draggable.offsetLeft;
+                         const initialTop = bankRect.top - puzzleRect.top + draggable.offsetTop;
+                         
+                         draggable.style.left = `${initialLeft}px`;
+                         draggable.style.top = `${initialTop}px`;
+
+                         puzzleArea.appendChild(draggable);
+                         draggable.classList.add('on-board');
+                    }
+                    
+                    document.addEventListener('mousemove', dragMove);
+                    document.addEventListener('mouseup', endDrag);
+                    document.addEventListener('touchmove', dragMove, { passive: false });
+                    document.addEventListener('touchend', endDrag);
+                };
+                
+                const dragMove = (e) => {
                     e.preventDefault();
-                    zone.classList.add('hover');
-                });
+                    const event = e.touches ? e.touches[0] : e;
+                    const puzzleRect = puzzleArea.getBoundingClientRect();
+                    let x = event.clientX - puzzleRect.left - offsetX;
+                    let y = event.clientY - puzzleRect.top - offsetY;
 
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('hover');
-                });
+                    // Constrain to puzzle area
+                    x = Math.max(0, Math.min(x, puzzleRect.width - draggable.offsetWidth));
+                    y = Math.max(0, Math.min(y, puzzleRect.height - draggable.offsetHeight));
 
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    zone.classList.remove('hover');
-                    const id = e.dataTransfer.getData('text/plain');
-                    const draggableElement = document.getElementById(id);
+                    draggable.style.left = `${x}px`;
+                    draggable.style.top = `${y}px`;
 
-                    // If the drop zone is empty, allow dropping
-                    if (zone.children.length === 0) {
-                        zone.appendChild(draggableElement);
-                        zone.classList.add('filled');
-                        // Reset styles for dragged element
-                        draggableElement.style.position = 'static';
-                        draggableElement.style.width = '100%';
-                        draggableElement.style.height = '100%';
-                         if(draggableElement.classList.contains('draggable-organ')){
-                            draggableElement.style.objectFit = 'contain';
-                        }
+                    // Highlight drop zones
+                    checkDropZoneHover(event.clientX, event.clientY);
+                };
+
+                const endDrag = (e) => {
+                    draggable.classList.remove('dragging');
+                    document.removeEventListener('mousemove', dragMove);
+                    document.removeEventListener('mouseup', endDrag);
+                    document.removeEventListener('touchmove', dragMove);
+                    document.removeEventListener('touchend', endDrag);
+                    
+                    const event = e.changedTouches ? e.changedTouches[0] : e;
+                    snapToDropZone(draggable, event.clientX, event.clientY);
+                };
+
+                draggable.addEventListener('mousedown', startDrag);
+                draggable.addEventListener('touchstart', startDrag);
+            });
+
+            function checkDropZoneHover(x, y) {
+                dropZones.forEach(zone => {
+                    const rect = zone.getBoundingClientRect();
+                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                        zone.classList.add('hover');
+                    } else {
+                        zone.classList.remove('hover');
                     }
                 });
-            });
+            }
+
+            function snapToDropZone(draggable, x, y) {
+                 let snapped = false;
+                 dropZones.forEach(zone => {
+                    zone.classList.remove('hover');
+                    const rect = zone.getBoundingClientRect();
+                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                       if(zone.children.length === 0){
+                           zone.appendChild(draggable);
+                           draggable.classList.remove('on-board');
+                           draggable.style.position = 'relative';
+                           draggable.style.left = '0';
+                           draggable.style.top = '0';
+                           draggable.style.width = '100%';
+                           draggable.style.height = '100%';
+                           if (draggable.classList.contains('draggable-organ')) {
+                                draggable.style.objectFit = 'contain';
+                           }
+                           snapped = true;
+                           zone.classList.add('filled');
+                       }
+                    }
+                });
+            }
 
             // --- Check Button Logic ---
-
             checkBtn.addEventListener('click', () => {
                 let correctCount = 0;
-                const totalZones = dropZones.length;
 
+                // 1. Check pieces inside drop zones
                 dropZones.forEach(zone => {
                     if (zone.children.length > 0) {
                         const droppedElement = zone.children[0];
                         if (droppedElement.id === zone.dataset.correctId) {
                             correctCount++;
-                            // Optional: Add a class to show it's correct
-                             zone.style.border = '2px solid var(--correct-color)';
+                            zone.style.border = '2px solid var(--correct-color)';
                         } else {
-                            // Incorrect: return to original bank
-                            const originalParentId = droppedElement.dataset.originalParent;
-                            const originalParent = document.getElementById(originalParentId);
-                            originalParent.appendChild(droppedElement);
-                            // Reset styles
-                            droppedElement.style.position = '';
-                            droppedElement.style.width = '';
-                            droppedElement.style.height = '';
-                            droppedElement.style.objectFit = '';
+                            resetPiece(droppedElement);
                             zone.classList.remove('filled');
-                            zone.style.border = '1px dashed var(--drop-zone-border)'; // Reset border
                         }
                     }
                 });
+                
+                // 2. Reset any pieces left freely on the board
+                const floatingPieces = puzzleArea.querySelectorAll('.draggable.on-board');
+                floatingPieces.forEach(resetPiece);
+
 
                 // --- Winning Condition ---
-                if (correctCount === totalZones) {
+                if (correctCount === dropZones.length) {
                     alert('恭喜你，全部都答對了！');
                     nextPageBtn.classList.remove('disabled');
                 } else {
-                     alert(`答對了 ${correctCount} 個，還有 ${totalZones - correctCount} 個需要修正。`);
+                    alert(`答對了 ${correctCount} 個，請繼續加油！`);
                 }
             });
+            
+            function resetPiece(piece) {
+                const originalParent = document.getElementById(piece.dataset.originalParent);
+                originalParent.appendChild(piece);
+                piece.classList.remove('on-board');
+                piece.style.position = '';
+                piece.style.left = '';
+                piece.style.top = '';
+                piece.style.width = '';
+                piece.style.height = '';
+                piece.style.objectFit = '';
+            }
         });
     </script>
 </body>
