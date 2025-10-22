@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>序章 - 為什麼要消化？</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+        /* --- Google 字體與基本設定 --- */
+    :root {
+        --bg-color: #fdeedc; /* 薑餅牆壁色 */
+        --wall-pattern: url('https://www.transparenttextures.com/patterns/cubes.png');
+        --primary-text: #6b4226; /* 巧克力色 */
+        --button-bg-starch: #89cff0; /* 淺藍 */
+        --button-bg-protein: #f28b82; /* 粉紅 */
+        --button-bg-lipid: #fddc6c;  /* 淡黃 */
+        --cell-membrane: #d4a778; /* 餅乾色 */
+        --frosting: #ffffff; /* 糖霜白 */
+        --correct-color: #28a745; /* 正確的綠色 */
+        --incorrect-color: #dc3545; /* 錯誤的紅色 */
+    }
+    
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+        background-color: var(--bg-color);
+        background-image: var(--wall-pattern);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        user-select: none;
+    }
+    
+    #game-container {
+        width: 800px;
+        height: 95vh;
+        max-height: 800px;
+        background: #fff8f0;
+        border: 10px solid var(--primary-text);
+        border-radius: 30px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(107, 66, 38, 0.3);
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    
+    h1 {
+        font-family: 'Fredoka One', cursive;
+        color: var(--primary-text);
+        text-align: center;
+        margin: 0;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 3px #fff;
+    }
+    
+    header p {
+        text-align: center;
+        color: var(--primary-text);
+        font-size: 1.1em;
+        line-height: 1.4;
+    }
+    
+    /* --- 遊戲主要區域 --- */
+    #game-area {
+        flex-grow: 1;
+        position: relative;
+        background: linear-gradient(to bottom, #ffe8d6 0%, #ffdbc1 100%);
+        border: 4px dashed var(--frosting);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    #macromolecule-area {
+        height: 80%;
+        position: relative;
+    }
+    
+    #cell-membrane-area {
+        height: 20%;
+        background-color: var(--cell-membrane);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-top: 10px solid #c18c54;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+    
+    .channel {
+        padding: 10px;
+        border-radius: 10px;
+        color: var(--primary-text);
+        font-weight: bold;
+        font-size: 0.9em;
+        text-align: center;
+    }
+    #glucose-channel {
+        background: #e1f5fe;
+        border: 3px dotted #89cff0;
+    }
+    #amino-acid-channel {
+        background: #ffcdd2;
+        border: 3px dotted #f28b82;
+    }
+    #lipid-channel {
+        background: #fff9c4;
+        border: 3px dotted #fddc6c;
+    }
+    
+    
+    /* --- 控制列 --- */
+    footer {
+        padding-top: 15px;
+        flex-shrink: 0; /* 確保 footer 不會被壓縮 */
+    }
+    #info-bar {
+        display: flex;
+        justify-content: space-between;
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.5em;
+        color: var(--primary-text);
+        padding: 0 20px 10px;
+    }
+    
+    #enzyme-buttons {
+        display: flex;
+        justify-content: space-around;
+    }
+    .enzyme-btn {
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.2em;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 5px #6b4226;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    .enzyme-btn:active {
+        transform: translateY(3px);
+        box-shadow: 0 2px #6b4226;
+    }
+    #amylase-btn { background-color: var(--button-bg-starch); }
+    #protease-btn { background-color: var(--button-bg-protein); }
+    #lipase-btn { background-color: var(--button-bg-lipid); }
+    
+    /* --- 大分子糖果樣式 --- */
+    .macromolecule {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        cursor: crosshair;
+        animation: float 8s ease-in-out infinite;
+        transition: transform 0.2s, opacity 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--primary-text);
+        font-weight: bold;
+        font-size: 14px;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+    
+    .starch {
+        width: 0;
+        height: 0;
+        border-left: 60px solid transparent;
+        border-right: 60px solid transparent;
+        border-bottom: 105px solid var(--button-bg-starch);
+    }
+    
+    .protein {
+        width: 100px;
+        height: 100px;
+        background-color: var(--button-bg-protein);
+        clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    }
+    
+    .lipid {
+        width: 100px;
+        height: 100px;
+        background-color: var(--button-bg-lipid);
+        border-radius: 50%;
+    }
+    
+    .molecule-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+    }
+    .starch .molecule-text {
+        transform: translateY(25px);
+    }
+    
+    .macromolecule.hit {
+        animation: break-apart 0.5s forwards;
+    }
+    .macromolecule.miss {
+        animation: shake 0.3s;
+    }
+    
+    /* === 小分子樣式 === */
+    .micromolecule {
+        position: absolute;
+        z-index: 10;
+    }
+    .glucose {
+        width: 15px; height: 15px;
+        background: #fff;
+        border: 3px solid var(--button-bg-starch);
+        box-shadow: 0 0 5px #fff;
+        transform: rotate(45deg);
+    }
+    .amino-acid {
+        width: 15px; height: 15px;
+        background: var(--button-bg-protein);
+        border-radius: 3px;
+    }
+    .fatty-acid {
+        width: 10px; height: 20px;
+        background: var(--button-bg-lipid);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    }
+    
+    .breakdown-text-popup {
+        position: absolute;
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.5em;
+        color: var(--primary-text);
+        animation: flash-fade 1s forwards;
+        z-index: 15;
+    }
+    
+    
+    /* --- 提示訊息 --- */
+    #initial-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.5em;
+        color: var(--primary-text);
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        animation: fadeOut 4s forwards;
+        z-index: 20;
+    }
+    
+    #feedback-area {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Fredoka One', cursive;
+        font-size: 3em;
+        color: #ff4757;
+        z-index: 20;
+    }
+    
+    .score-popup {
+        animation: score-up 1s forwards;
+        position: absolute;
+    }
+    
+    /* --- 彈出視窗 (Modal) --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+    
+    .modal-content {
+        background: var(--bg-color);
+        padding: 20px 30px;
+        border-radius: 20px;
+        border: 5px solid var(--primary-text);
+        text-align: center;
+        width: 80%;
+        max-width: 600px;
+        color: var(--primary-text);
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .assessment-scroll-area {
+        overflow-y: auto;
+        flex-grow: 1;
+        margin-bottom: 15px;
+        padding: 5px 15px 5px 5px;
+        text-align: left;
+    }
+    
+    
+    .modal-content h2 {
+        font-family: 'Fredoka One', cursive;
+        font-size: 2.5em;
+        margin-top: 0;
+        margin-bottom: 15px;
+        flex-shrink: 0;
+    }
+    #final-score-text { font-size: 1.8em; font-weight: bold; }
+    #final-comment { font-size: 1.2em; font-style: italic; }
+    
+    /* --- 評量區塊樣式 --- */
+    .assessment-content .question {
+        margin-bottom: 20px;
+        background: #fff8f0;
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+    }
+    .assessment-content .question.incorrect {
+        border-color: var(--incorrect-color);
+    }
+    
+    #drag-drop-question { display: flex; align-items: center; justify-content: space-between; }
+    .drag-column, .drop-column { display: flex; flex-direction: column; gap: 10px; }
+    .draggable, .droptarget {
+        padding: 10px;
+        border: 2px dashed var(--primary-text);
+        border-radius: 8px;
+        cursor: grab;
+    }
+    .draggable { background: #fff; }
+    .droptarget { background: #eee; }
+    .droptarget.correct { background: #d4edda; border-color: #c3e6cb; }
+    .droptarget.over { border-style: solid; background: #cce5ff; }
+    
+    #mcq-question-1 label, #mcq-question-2 label { 
+        display: block; margin: 5px 0; padding: 5px; border-radius: 5px; cursor: pointer; 
+    }
+    #mcq-question-1 label:hover, #mcq-question-2 label:hover { 
+        background-color: #fdeedc; 
+    }
+    
+    .navigation-buttons { 
+        margin-top: 10px;
+        display: flex; 
+        gap: 10px; 
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .navigation-buttons button {
+        font-family: 'Fredoka One', cursive;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    #restart-btn { background: #a5d6a7; color: white; }
+    #check-answers-btn { background: #64b5f6; color: white; }
+    #next-page-btn { background: #90a4ae; color: #eceff1; }
+    #next-page-btn:not(:disabled) {
+        background: #ffca28;
+        color: var(--primary-text);
+        animation: pulse 1.5s infinite;
+    }
+    #assessment-hint { 
+        color: var(--incorrect-color); 
+        font-weight: bold; 
+        font-size: 1em; 
+        margin-top: 5px;
+        margin-bottom: 0;
+        min-height: 1.2em;
+        flex-shrink: 0;
+    }
+    
+    /* --- 動畫 --- */
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(10deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+    @keyframes break-apart {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    @keyframes score-up {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-80px); opacity: 0; }
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 10px 15px rgba(255, 202, 40, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); }
+    }
+    @keyframes flash-fade {
+        0% {
+            opacity: 1;
+            transform: scale(0.8) translateY(0);
+        }
+        50% {
+            transform: scale(1.2) translateY(-15px);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0.5) translateY(20px);
+        }
+    }
+    
+    /* === 主要修正點：響應式設計，針對矮寬螢幕 (如 iPad 橫向) === */
+    @media (orientation: landscape) and (max-height: 500px) {
+        #game-container {
+            padding: 10px; /* 縮小整體邊距 */
+        }
+        
+        h1 {
+            font-size: 1.8em; /* 縮小標題 */
+        }
+    
+        header p {
+            font-size: 0.8em; /* 縮小說明文字 */
+            line-height: 1.2;
+            margin: 5px 0;
+        }
+    
+        footer {
+            padding-top: 10px; /* 縮小 footer 上方間距 */
+        }
+    
+        #info-bar {
+            font-size: 1.2em; /* 縮小時間分數文字 */
+            padding-bottom: 5px;
+        }
+    
+        .enzyme-btn {
+            font-size: 1em; /* 縮小按鈕文字 */
+            padding: 8px 20px; /* 縮小按鈕大小 */
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>為什麼要消化？</h1>
+            <p>
+                消化作用是將大分子分解成小分子過程。<br>
+                食物中的大分子養分，需要經過<mark>適合的酵素</mark>協助分解成小分子，<br>
+                ，才能<mark>穿過細胞膜</mark>，讓細胞吸收利用。
+            </p>
+        </header>
+
+        <main id="game-area">
+            <div id="macromolecule-area">
+                <div id="initial-message">快使用正確的消化酵素，幫助下方的細胞吸收養分吧！</div>
+            </div>
+            <div id="feedback-area">
+                </div>
+            <div id="cell-membrane-area">
+                <div class="channel" id="glucose-channel">葡萄糖專用通道</div>
+                <div class="channel" id="amino-acid-channel">胺基酸專用通道</div>
+                <div class="channel" id="lipid-channel">脂肪酸直接通過細胞膜</div>
+            </div>
+        </main>
+
+        <footer>
+            <div id="info-bar">
+                <div id="timer">時間：60</div>
+                <div id="score">分數：0</div>
+            </div>
+            <div id="enzyme-buttons">
+                <button id="amylase-btn" class="enzyme-btn">澱粉酶</button>
+                <button id="protease-btn" class="enzyme-btn">蛋白酶</button>
+                <button id="lipase-btn" class="enzyme-btn">脂肪酶</button>
+            </div>
+        </footer>
+    </div>
+
+    <div id="game-over-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>時間到！</h2>
+            <p id="final-score-text"></p>
+            <p id="final-comment"></p>
+        </div>
+    </div>
+
+    <div id="assessment-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content assessment-content">
+            <h2>學習評量</h2>
+
+            <div class="assessment-scroll-area">
+                <div class="question" id="q3">
+                    <p><b>第一題：</b>將大分子養分轉變成較小分子養分的過程稱為什麼？</p>
+                    <form id="mcq-question-2">
+                        <label><input type="radio" name="digestion-q2" value="A"> (A) 攝食</label>
+                        <label><input type="radio" name="digestion-q2" value="B"> (B) 吸收</label>
+                        <label><input type="radio" name="digestion-q2" value="C"> (C) 消化</label>
+                    </form>
+                </div>
+                
+                <div class="question" id="q1">
+                    <p><b>第二題：</b>請將左邊的大分子，配對到它分解後產生的小分子。</p>
+                    <div id="drag-drop-question">
+                        <div class="drag-column">
+                            <div class="draggable" draggable="true" id="drag-starch">澱粉</div>
+                            <div class="draggable" draggable="true" id="drag-protein">蛋白質</div>
+                            <div class="draggable" draggable="true" id="drag-lipid">脂肪</div>
+                        </div>
+                        <canvas id="line-canvas" width="100" height="150"></canvas>
+                        <div class="drop-column">
+                            <div class="droptarget" data-match="drag-protein">胺基酸</div>
+                            <div class="droptarget" data-match="drag-lipid">脂肪酸與甘油</div>
+                            <div class="droptarget" data-match="drag-starch">葡萄糖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <p><b>第三題：</b>為什麼食物需要「消化」？</p>
+                    <form id="mcq-question-1">
+                        <label><input type="radio" name="digestion-q1" value="A"> (A) 為了讓食物變得更好吃。</label>
+                        <label><input type="radio" name="digestion-q1" value="B"> (B) 因為大分子養分要分解成小分子，才能通過細胞膜被吸收。</label>
+                        <label><input type="radio" name="digestion-q1" value="C"> (C) 為了殺死食物中的細菌。</label>
+                        <label><input type="radio" name="digestion-q1" value="D"> (D) 讓肚子有飽足感。</label>
+                    </form>
+                </div>
+            </div>
+
+            <p id="assessment-hint" style="display: none;"></p>
+            <div class="navigation-buttons">
+                <button id="prev-page-btn" disabled>上一頁</button>
+                <button id="restart-btn">重新開始</button>
+                <button id="check-answers-btn">檢查答案</button>
+                <button id="next-page-btn" disabled>下一頁</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch/DragDropTouch.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          // --- DOM 元素獲取 ---
+          const timerDisplay = document.getElementById('timer');
+          const scoreDisplay = document.getElementById('score');
+          const macromoleculeArea = document.getElementById('macromolecule-area');
+          const enzymeButtons = document.querySelectorAll('.enzyme-btn');
+          const gameOverModal = document.getElementById('game-over-modal');
+          const assessmentModal = document.getElementById('assessment-modal');
+          const finalScoreText = document.getElementById('final-score-text');
+          const finalComment = document.getElementById('final-comment');
+          const nextPageBtn = document.getElementById('next-page-btn');
+          const restartBtn = document.getElementById('restart-btn');
+          const feedbackArea = document.getElementById('feedback-area');
+          const initialMessage = document.getElementById('initial-message');
+          // 新增：評量相關元素
+          const checkAnswersBtn = document.getElementById('check-answers-btn');
+          const assessmentHint = document.getElementById('assessment-hint');
+      
+          // --- 遊戲狀態變數 ---
+          let score = 0;
+          let timeLeft = 40;
+          let timerInterval;
+          let currentMolecule = null;
+          let combo = 0;
+          let gameActive = false;
+      
+          // 定義分子屬性
+          const molecules = [
+              { name: 'starch', enzyme: 'amylase-btn', displayText: '大分子澱粉', smallShape: 'glucose', smallText: '葡萄糖', channel: '#glucose-channel' },
+              { name: 'protein', enzyme: 'protease-btn', displayText: '大分子蛋白質', smallShape: 'amino-acid', smallText: '胺基酸', channel: '#amino-acid-channel' },
+              { name: 'lipid', enzyme: 'lipase-btn', displayText: '大分子脂肪', smallShape: 'fatty-acid', smallText: '脂肪酸', channel: '#lipid-channel' }
+          ];
+      
+          // --- 遊戲流程控制 ---
+          function startGame() {
+              score = 0;
+              timeLeft = 40;
+              combo = 0;
+              gameActive = true;
+              updateScore(0);
+              timerDisplay.textContent = `時間：${timeLeft}`;
+              initialMessage.style.display = 'block';
+              initialMessage.style.opacity = '1';
+              gameOverModal.style.display = 'none';
+              assessmentModal.style.display = 'none';
+              
+              clearInterval(timerInterval);
+              timerInterval = setInterval(updateTimer, 1000);
+              
+              macromoleculeArea.innerHTML = ''; 
+              macromoleculeArea.appendChild(initialMessage);
+      
+              setTimeout(spawnMolecule, 1000);
+              
+              enzymeButtons.forEach(button => {
+                  button.onclick = (e) => handleEnzymeClick(e.target.id);
+              });
+          }
+      
+          function updateTimer() {
+              timeLeft--;
+              timerDisplay.textContent = `時間：${timeLeft}`;
+              if (timeLeft <= 0) {
+                  endGame();
+              }
+          }
+      
+          function endGame() {
+              clearInterval(timerInterval);
+              gameActive = false;
+              if (currentMolecule && currentMolecule.element) {
+                  currentMolecule.element.remove();
+                  currentMolecule = null;
+              }
+              
+              finalScoreText.textContent = `你的最終分數是：${score}`;
+              if (score > 2000) {
+                  finalComment.textContent = "太厲害了！你是消化大師！";
+              } else if (score > 1000) {
+                  finalComment.textContent = "不錯喔！細胞吸收到滿滿的養分了！";
+              } else {
+                  finalComment.textContent = "再接再厲！為細胞補充更多養分吧！";
+              }
+      
+              gameOverModal.style.display = 'flex';
+              setTimeout(() => {
+                  gameOverModal.style.display = 'none';
+                  assessmentModal.style.display = 'flex';
+                  setupAssessment();
+              }, 3000);
+          }
+          
+          // --- 遊戲核心互動 ---
+          function spawnMolecule() {
+              if (!gameActive) return;
+              if (currentMolecule && currentMolecule.element) {
+                  currentMolecule.element.remove();
+              }
+              
+              const moleculeData = molecules[Math.floor(Math.random() * molecules.length)];
+              const moleculeEl = document.createElement('div');
+              moleculeEl.classList.add('macromolecule', moleculeData.name);
+              
+              const textEl = document.createElement('span');
+              textEl.classList.add('molecule-text');
+              textEl.textContent = moleculeData.displayText;
+              moleculeEl.appendChild(textEl);
+              
+              const areaRect = macromoleculeArea.getBoundingClientRect();
+              const x = Math.random() * (areaRect.width - 120);
+              const y = Math.random() * (areaRect.height - 160);
+              moleculeEl.style.left = `${x}px`;
+              moleculeEl.style.top = `${y}px`;
+              
+              macromoleculeArea.appendChild(moleculeEl);
+              currentMolecule = { ...moleculeData, element: moleculeEl };
+          }
+      
+          function handleEnzymeClick(buttonId) {
+              if (!gameActive || !currentMolecule) return;
+      
+              if (buttonId === currentMolecule.enzyme) {
+                  combo++;
+                  const points = 100 * combo;
+                  updateScore(points);
+                  showFeedback(`+${points}` + (combo > 1 ? ` COMBO x${combo}` : ''));
+                  
+                  const rect = currentMolecule.element.getBoundingClientRect();
+                  currentMolecule.element.classList.add('hit');
+                  
+                  showBreakdownTextEffect(rect, currentMolecule.smallText);
+                  createMicromoleculeShapes(rect, currentMolecule.smallShape, currentMolecule.channel);
+      
+                  const moleculeToRemove = currentMolecule.element;
+                  currentMolecule = null; 
+                  setTimeout(() => moleculeToRemove.remove(), 500);
+                  setTimeout(spawnMolecule, 600);
+      
+              } else {
+                  combo = 0;
+                  currentMolecule.element.classList.add('miss');
+                  setTimeout(() => {
+                      if(currentMolecule && currentMolecule.element) {
+                        currentMolecule.element.classList.remove('miss');
+                      }
+                  }, 300);
+              }
+          }
+          
+          // --- 分數與視覺回饋 ---
+          function updateScore(points) {
+              score += points;
+              scoreDisplay.textContent = `分數：${score}`;
+          }
+      
+          function showFeedback(text) {
+              const feedbackEl = document.createElement('div');
+              feedbackEl.classList.add('score-popup');
+              feedbackEl.textContent = text;
+              feedbackArea.appendChild(feedbackEl);
+              setTimeout(() => feedbackEl.remove(), 1000);
+          }
+      
+          // --- 動畫效果 ---
+          function showBreakdownTextEffect(startRect, text) {
+              const containerRect = macromoleculeArea.getBoundingClientRect(); 
+              for (let i = 0; i < 7; i++) {
+                  const textEl = document.createElement('div');
+                  textEl.classList.add('breakdown-text-popup');
+                  textEl.textContent = text;
+                  const offsetX = Math.random() * 100 - 50;
+                  const offsetY = Math.random() * 100 - 50;
+                  textEl.style.left = `${startRect.left - containerRect.left + 60 + offsetX}px`;
+                  textEl.style.top = `${startRect.top - containerRect.top + 60 + offsetY}px`;
+                  macromoleculeArea.appendChild(textEl);
+                  setTimeout(() => textEl.remove(), 1000);
+              }
+          }
+          function createMicromoleculeShapes(startRect, shapeType, channelSelector) {
+              const containerRect = macromoleculeArea.getBoundingClientRect();
+              const channelEl = document.querySelector(channelSelector);
+              if (!channelEl) return;
+              
+              const channelRect = channelEl.getBoundingClientRect();
+              const endX = channelRect.left - containerRect.left + channelRect.width / 2;
+              const endY = channelRect.top - containerRect.top + channelRect.height / 2;
+      
+              for (let i = 0; i < 5; i++) {
+                  const microEl = document.createElement('div');
+                  microEl.classList.add('micromolecule', shapeType);
+                  microEl.style.left = `${startRect.left - containerRect.left + 60 + Math.random() * 40 - 20}px`;
+                  microEl.style.top = `${startRect.top - containerRect.top + 60 + Math.random() * 40 - 20}px`;
+                  macromoleculeArea.appendChild(microEl);
+      
+                  setTimeout(() => {
+                      microEl.style.transition = 'all 1s ease-in-out';
+                      microEl.style.left = `${endX + Math.random() * 20 - 10}px`;
+                      microEl.style.top = `${endY}px`;
+                      microEl.style.opacity = '0';
+                      microEl.style.transform = 'scale(0.5)';
+                  }, 100 * i);
+                  setTimeout(() => microEl.remove(), 1100 + 100 * i);
+              }
+          }
+          
+          // --- 評量區塊邏輯 ---
+          function setupAssessment() {
+              // --- 拖曳題邏輯 ---
+              const draggables = document.querySelectorAll('.draggable');
+              const droptargets = document.querySelectorAll('.droptarget');
+              let draggedItem = null;
+              draggables.forEach(draggable => {
+                  draggable.addEventListener('dragstart', (e) => { draggedItem = e.target; setTimeout(() => e.target.style.display = 'none', 0); });
+                  draggable.addEventListener('dragend', () => { setTimeout(() => { if(draggedItem) { draggedItem.style.display = 'block'; draggedItem = null;} }, 0); });
+              });
+              droptargets.forEach(droptarget => {
+                  droptarget.addEventListener('dragover', e => e.preventDefault());
+                  droptarget.addEventListener('dragenter', e => { e.preventDefault(); e.target.classList.add('over'); });
+                  droptarget.addEventListener('dragleave', e => e.target.classList.remove('over'));
+                  droptarget.addEventListener('drop', e => {
+                      e.target.classList.remove('over');
+                      if (draggedItem && e.target.dataset.match === draggedItem.id) {
+                          e.target.appendChild(draggedItem);
+                          draggedItem.setAttribute('draggable', 'false');
+                          e.target.classList.add('correct');
+                      }
+                  });
+              });
+      
+              // --- 檢查答案按鈕事件 ---
+              checkAnswersBtn.addEventListener('click', checkAllAnswers);
+          }
+          
+          function checkAllAnswers() {
+              let allCorrect = true;
+              let hints = [];
+      
+              // --- 檢查第二題 (拖曳) ---
+              const q1 = document.getElementById('q1');
+              const correctDrops = document.querySelectorAll('.droptarget.correct').length;
+              if (correctDrops !== 3) {
+                  allCorrect = false;
+                  q1.classList.add('incorrect');
+                  hints.push("第二題配對不完全喔");
+              } else {
+                  q1.classList.remove('incorrect');
+              }
+      
+              // --- 檢查第三題 (單選) ---
+              const q2 = document.getElementById('q2');
+              const selectedAnswer1 = document.querySelector('input[name="digestion-q1"]:checked');
+              if (!selectedAnswer1 || selectedAnswer1.value !== 'B') {
+                  allCorrect = false;
+                  q2.classList.add('incorrect');
+                  hints.push("第三題想一想剛剛遊戲中，大分子變小就可以通過什麼呢");
+              } else {
+                  q2.classList.remove('incorrect');
+              }
+      
+              // --- 檢查第一題 (單選) ---
+              const q3 = document.getElementById('q3');
+              const selectedAnswer2 = document.querySelector('input[name="digestion-q2"]:checked');
+              if (!selectedAnswer2 || selectedAnswer2.value !== 'C') {
+                  allCorrect = false;
+                  q3.classList.add('incorrect');
+                  hints.push("第一題，這個過程就叫做「消化」作用喔");
+              } else {
+                  q3.classList.remove('incorrect');
+              }
+      
+              // --- 顯示結果 ---
+              if (allCorrect) {
+                  assessmentHint.style.display = 'block';
+                  assessmentHint.textContent = '太棒了！全部答對！';
+                  assessmentHint.style.color = 'var(--correct-color)';
+                  nextPageBtn.disabled = false;
+              } else {
+                  assessmentHint.style.display = 'block';
+                  assessmentHint.textContent = "答錯了，提示：" + hints.join('；'); // 將所有提示合併顯示
+                  assessmentHint.style.color = 'var(--incorrect-color)';
+                  nextPageBtn.disabled = true;
+              }
+          }
+          
+          // --- 導航按鈕 ---
+          restartBtn.addEventListener('click', () => { 
+              assessmentModal.style.display = 'none';
+              startGame();
+          });
+          nextPageBtn.addEventListener('click', () => {
+              if (!nextPageBtn.disabled) {
+                  window.location.href = "https://browman75.github.io/digestion/3_codepair.html"
+              }
+          });
+          
+      
+          // --- 遊戲自動開始 ---
+          startGame();
+      });
+    </script>
+</body>
+</html>
