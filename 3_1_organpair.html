@@ -235,7 +235,7 @@
                 if (p.type === 'icon') {
                     elem = document.createElement('img');
                     // MODIFIED: Use the English fileName for the image path
-                    elem.src = './images/organ_${p.fileName}.png';
+                    elem.src = ‘./images/organ_${p.fileName}.png’;
                     elem.classList.add('draggable-icon');
                     elem.addEventListener('error', () => { 
                         elem.style.border = '1px solid red'; 
