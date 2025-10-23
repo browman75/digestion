@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (路徑更新版)</title>
+    <title>器官拼圖 (英文檔名版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -208,15 +208,16 @@
             const nextPageBtn = document.getElementById('next-page-btn');
 
             const piecesData = [
-                { type: 'icon', id_part: 'mouth-img', name: '口腔' },
-                { type: 'icon', id_part: 'pharynx-img', name: '咽' },
-                { type: 'icon', id_part: 'esophagus-img', name: '食道' },
-                { type: 'icon', id_part: 'liver-img', name: '肝' },
-                { type: 'icon', id_part: 'gallbladder-img', name: '膽' },
-                { type: 'icon', id_part: 'stomach-img', name: '胃' },
-                { type: 'icon', id_part: 'pancreas-img', name: '胰臟' },
-                { type: 'icon', id_part: 'large-intestine-img', name: '大腸' },
-                { type: 'icon', id_part: 'small-intestine-img', name: '小腸' },
+                { type: 'icon', id_part: 'mouth-img', name: '口腔', fileName: 'mouth' },
+                { type: 'icon', id_part: 'pharynx-img', name: '咽', fileName: 'pharynx' },
+                { type: 'icon', id_part: 'esophagus-img', name: '食道', fileName: 'esophagus' },
+                { type: 'icon', id_part: 'liver-img', name: '肝', fileName: 'liver' },
+                { type: 'icon', id_part: 'gallbladder-img', name: '膽', fileName: 'gallbladder' },
+                { type: 'icon', id_part: 'stomach-img', name: '胃', fileName: 'stomach' },
+                { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
+                { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
+                { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
+                
                 { type: 'label', id_part: 'mouth-label', name: '口腔' },
                 { type: 'label', id_part: 'pharynx-label', name: '咽' },
                 { type: 'label', id_part: 'esophagus-label', name: '食道' },
@@ -233,15 +234,17 @@
                 let elem;
                 if (p.type === 'icon') {
                     elem = document.createElement('img');
-                    elem.src = `./images/organ_${p.name}.png`;
+                    // MODIFIED: Use the English fileName for the image path
+                    elem.src = `./images/organ_${p.fileName}.png`;
                     elem.classList.add('draggable-icon');
-                    elem.addEventListener('error', () => { // Handle missing images
+                    elem.addEventListener('error', () => { 
                         elem.style.border = '1px solid red'; 
-                        elem.alt = `${p.name} 圖片遺失`;
+                        elem.alt = `${p.fileName} 圖片遺失`;
                     });
                     organPiecesContainer.appendChild(elem);
                 } else {
                     elem = document.createElement('div');
+                    // Label text remains in Chinese from the 'name' property
                     elem.textContent = p.name;
                     elem.classList.add('draggable-label');
                     labelPiecesContainer.appendChild(elem);
@@ -273,11 +276,9 @@
                     }
                 });
             }
-            // Use a small delay to ensure layout is stable
             setTimeout(sizeIconsOnLoad, 100);
 
-
-            // --- Drag and Drop Logic for Free Movement ---
+            // --- Drag and Drop Logic ---
             draggables.forEach(draggable => {
                 let offsetX, offsetY;
                 const startDrag = (e) => {
@@ -293,7 +294,6 @@
                          puzzleArea.appendChild(draggable);
                          draggable.classList.add('on-board');
                          
-                         // Position it correctly relative to the puzzle area
                          let x = event.clientX - puzzleRect.left - offsetX;
                          let y = event.clientY - puzzleRect.top - offsetY;
                          draggable.style.left = `${x}px`;
@@ -349,7 +349,6 @@
             }
 
             function snapToDropZone(draggable, x, y) {
-                 let snapped = false;
                  dropZones.forEach(zone => {
                     zone.classList.remove('hover');
                     const rect = zone.getBoundingClientRect();
@@ -362,7 +361,6 @@
                            draggable.style.top = '0';
                            draggable.style.width = '100%';
                            draggable.style.height = '100%';
-                           snapped = true;
                            zone.classList.add('filled');
                        }
                     }
@@ -400,14 +398,11 @@
             
             function resetPiece(piece) {
                 const originalParent = document.getElementById(piece.dataset.originalParent);
-                if (originalParent) {
-                    originalParent.appendChild(piece);
-                }
+                if (originalParent) { originalParent.appendChild(piece); }
                 piece.classList.remove('on-board');
                 piece.style.position = '';
                 piece.style.left = '';
                 piece.style.top = '';
-                // Reset size for icons when they return to the bank
                 if(piece.classList.contains('draggable-icon')) {
                     sizeIconsOnLoad();
                 } else {
