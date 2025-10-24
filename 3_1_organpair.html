@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (修正版)</title>
+    <title>器官拼圖 (路徑更新)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -50,6 +50,7 @@
         #puzzle-area {
             flex: 2;
             position: relative;
+            /* MODIFIED: Background image path updated */
             background-image: url('./images/organ1_body.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -82,7 +83,7 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            align-items: center; /* Vertically align items */
+            align-items: center;
         }
 
         .draggable {
@@ -92,8 +93,7 @@
         }
         
         .draggable-icon {
-            /* Width and height will be set by JS */
-            object-fit: contain; /* Prevent image distortion */
+            object-fit: contain;
         }
 
         .draggable-label {
@@ -232,12 +232,10 @@
                 let elem;
                 if (p.type === 'icon') {
                     elem = document.createElement('img');
+                    // MODIFIED: Organ icon path updated
                     elem.src = `./images/organ1_${p.fileName}.png`;
                     elem.classList.add('draggable-icon');
-                    elem.addEventListener('error', () => { 
-                        elem.style.border = '1px solid red'; 
-                        elem.alt = `${p.fileName} 圖片遺失`;
-                    });
+                    elem.addEventListener('error', () => { elem.style.border = '1px solid red'; elem.alt = `${p.fileName} 圖片遺失`; });
                     organPiecesContainer.appendChild(elem);
                 } else {
                     elem = document.createElement('div');
@@ -248,7 +246,6 @@
                 elem.id = `drag-${p.id_part}`;
                 elem.classList.add('draggable');
                 elem.dataset.originalParent = elem.parentElement.id;
-
                 const zone = document.createElement('div');
                 zone.id = `drop-${p.id_part}`;
                 zone.classList.add('drop-zone');
@@ -273,74 +270,86 @@
             }
             setTimeout(sizeIconsOnLoad, 100);
 
-            draggables.forEach(draggable => {
-                let offsetX, offsetY;
-                const startDrag = (e) => {
-                    const event = e.touches ? e.touches[0] : e;
-                    draggable.classList.add('dragging');
-                    
-                    const rect = draggable.getBoundingClientRect();
-                    offsetX = event.clientX - rect.left;
-                    offsetY = event.clientY - rect.top;
+            // --- Drag and Drop Logic ---
+            let activeDraggable = null;
+            let isDragging = false;
+            let startX, startY, initialOffsetX, initialOffsetY;
 
-                    if (draggable.parentElement.id !== 'puzzle-area') {
-                         const puzzleRect = puzzleArea.getBoundingClientRect();
-                         const currentWidth = rect.width;
-                         const currentHeight = rect.height;
-                         
-                         puzzleArea.appendChild(draggable);
-                         draggable.classList.add('on-board');
+            function onMouseDown(e) {
+                activeDraggable = this;
+                isDragging = false;
+                const event = e.touches ? e.touches[0] : e;
+                startX = event.clientX;
+                startY = event.clientY;
+                const rect = activeDraggable.getBoundingClientRect();
+                initialOffsetX = event.clientX - rect.left;
+                initialOffsetY = event.clientY - rect.top;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                document.addEventListener('touchmove', onMouseMove, { passive: false });
+                document.addEventListener('touchend', onMouseUp);
+            }
 
-                         // ----- BUG FIX STARTS HERE -----
-                         // When dragged out of a drop-zone, restore its original pixel size,
-                         // instead of letting it stay at width:100%
-                         draggable.style.width = `${currentWidth}px`;
-                         draggable.style.height = `${currentHeight}px`;
-                         // ----- BUG FIX ENDS HERE -----
-
-                         let x = event.clientX - puzzleRect.left - offsetX;
-                         let y = event.clientY - puzzleRect.top - offsetY;
-                         draggable.style.left = `${x}px`;
-                         draggable.style.top = `${y}px`;
+            function onMouseMove(e) {
+                if (!activeDraggable) return;
+                e.preventDefault();
+                const event = e.touches ? e.touches[0] : e;
+                if (!isDragging) {
+                    const dx = event.clientX - startX;
+                    const dy = event.clientY - startY;
+                    if (Math.sqrt(dx * dx + dy * dy) > 5) {
+                        isDragging = true;
+                        initiateDrag(activeDraggable);
                     }
-                    
-                    document.addEventListener('mousemove', dragMove);
-                    document.addEventListener('mouseup', endDrag);
-                    document.addEventListener('touchmove', dragMove, { passive: false });
-                    document.addEventListener('touchend', endDrag);
-                };
-                
-                const dragMove = (e) => {
-                    e.preventDefault();
-                    const event = e.touches ? e.touches[0] : e;
-                    if (!event) return;
-                    const puzzleRect = puzzleArea.getBoundingClientRect();
-                    let x = event.clientX - puzzleRect.left - offsetX;
-                    let y = event.clientY - puzzleRect.top - offsetY;
-
-                    x = Math.max(0, Math.min(x, puzzleRect.width - draggable.offsetWidth));
-                    y = Math.max(0, Math.min(y, puzzleRect.height - draggable.offsetHeight));
-
-                    draggable.style.left = `${x}px`;
-                    draggable.style.top = `${y}px`;
-                    checkDropZoneHover(event.clientX, event.clientY);
-                };
-
-                const endDrag = (e) => {
-                    draggable.classList.remove('dragging');
-                    document.removeEventListener('mousemove', dragMove);
-                    document.removeEventListener('mouseup', endDrag);
-                    document.removeEventListener('touchmove', dragMove);
-                    document.removeEventListener('touchend', endDrag);
-                    
+                }
+                if (isDragging) {
+                    moveDraggable(event);
+                }
+            }
+            
+            function onMouseUp(e) {
+                if (isDragging) {
                     const event = e.changedTouches ? e.changedTouches[0] : e;
-                    snapToDropZone(draggable, event.clientX, event.clientY);
-                };
+                    snapToDropZone(activeDraggable, event.clientX, event.clientY);
+                }
+                if (activeDraggable) {
+                    activeDraggable.classList.remove('dragging');
+                }
+                activeDraggable = null;
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('touchmove', onMouseMove);
+                document.removeEventListener('touchend', onMouseUp);
+            }
 
-                draggable.addEventListener('mousedown', startDrag);
-                draggable.addEventListener('touchstart', startDrag);
+            function initiateDrag(draggable) {
+                draggable.classList.add('dragging');
+                if (draggable.parentElement.id !== 'puzzle-area') {
+                    const rect = draggable.getBoundingClientRect();
+                    puzzleArea.appendChild(draggable);
+                    draggable.classList.add('on-board');
+                    draggable.style.width = `${rect.width}px`;
+                    draggable.style.height = `${rect.height}px`;
+                }
+            }
+            
+            function moveDraggable(event) {
+                const puzzleRect = puzzleArea.getBoundingClientRect();
+                let x = event.clientX - puzzleRect.left - initialOffsetX;
+                let y = event.clientY - puzzleRect.top - initialOffsetY;
+                x = Math.max(0, Math.min(x, puzzleRect.width - activeDraggable.offsetWidth));
+                y = Math.max(0, Math.min(y, puzzleRect.height - activeDraggable.offsetHeight));
+                activeDraggable.style.left = `${x}px`;
+                activeDraggable.style.top = `${y}px`;
+                checkDropZoneHover(event.clientX, event.clientY);
+            }
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('mousedown', onMouseDown);
+                draggable.addEventListener('touchstart', onMouseDown, { passive: true });
             });
-
+            
             function checkDropZoneHover(x, y) {
                 dropZones.forEach(zone => {
                     const rect = zone.getBoundingClientRect();
@@ -373,7 +382,6 @@
 
             checkBtn.addEventListener('click', () => {
                 let correctCount = 0;
-
                 dropZones.forEach(zone => {
                     zone.style.border = '1px dashed var(--drop-zone-border)';
                     if (zone.children.length > 0) {
@@ -387,10 +395,8 @@
                         }
                     }
                 });
-                
                 const floatingPieces = puzzleArea.querySelectorAll('.draggable.on-board');
                 floatingPieces.forEach(resetPiece);
-
                 if (correctCount === dropZones.length) {
                     alert('恭喜你，全部都答對了！');
                     nextPageBtn.classList.remove('disabled');
@@ -407,7 +413,6 @@
                 piece.style.left = '';
                 piece.style.top = '';
                 if(piece.classList.contains('draggable-icon')) {
-                    // When returning to bank, it should restore its initial size
                     sizeIconsOnLoad();
                 } else {
                     piece.style.width = '';
