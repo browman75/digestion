@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (英文檔名版)</title>
+    <title>器官拼圖 (修正版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -217,7 +217,6 @@
                 { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
                 { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
                 { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
-                
                 { type: 'label', id_part: 'mouth-label', name: '口腔' },
                 { type: 'label', id_part: 'pharynx-label', name: '咽' },
                 { type: 'label', id_part: 'esophagus-label', name: '食道' },
@@ -229,12 +228,10 @@
                 { type: 'label', id_part: 'large-intestine-label', name: '大腸與肛門' }
             ];
 
-            // Create and place pieces and drop zones
             piecesData.forEach(p => {
                 let elem;
                 if (p.type === 'icon') {
                     elem = document.createElement('img');
-                    // MODIFIED: Use the English fileName for the image path
                     elem.src = `./images/organ1_${p.fileName}.png`;
                     elem.classList.add('draggable-icon');
                     elem.addEventListener('error', () => { 
@@ -244,7 +241,6 @@
                     organPiecesContainer.appendChild(elem);
                 } else {
                     elem = document.createElement('div');
-                    // Label text remains in Chinese from the 'name' property
                     elem.textContent = p.name;
                     elem.classList.add('draggable-label');
                     labelPiecesContainer.appendChild(elem);
@@ -263,7 +259,6 @@
             const draggables = document.querySelectorAll('.draggable');
             const dropZones = document.querySelectorAll('.drop-zone');
 
-            // --- Resize icons in the bank to match drop zones ---
             function sizeIconsOnLoad() {
                 const icons = document.querySelectorAll('.draggable-icon');
                 icons.forEach(icon => {
@@ -278,7 +273,6 @@
             }
             setTimeout(sizeIconsOnLoad, 100);
 
-            // --- Drag and Drop Logic ---
             draggables.forEach(draggable => {
                 let offsetX, offsetY;
                 const startDrag = (e) => {
@@ -291,9 +285,19 @@
 
                     if (draggable.parentElement.id !== 'puzzle-area') {
                          const puzzleRect = puzzleArea.getBoundingClientRect();
+                         const currentWidth = rect.width;
+                         const currentHeight = rect.height;
+                         
                          puzzleArea.appendChild(draggable);
                          draggable.classList.add('on-board');
-                         
+
+                         // ----- BUG FIX STARTS HERE -----
+                         // When dragged out of a drop-zone, restore its original pixel size,
+                         // instead of letting it stay at width:100%
+                         draggable.style.width = `${currentWidth}px`;
+                         draggable.style.height = `${currentHeight}px`;
+                         // ----- BUG FIX ENDS HERE -----
+
                          let x = event.clientX - puzzleRect.left - offsetX;
                          let y = event.clientY - puzzleRect.top - offsetY;
                          draggable.style.left = `${x}px`;
@@ -367,7 +371,6 @@
                 });
             }
 
-            // --- Check Button Logic ---
             checkBtn.addEventListener('click', () => {
                 let correctCount = 0;
 
@@ -404,6 +407,7 @@
                 piece.style.left = '';
                 piece.style.top = '';
                 if(piece.classList.contains('draggable-icon')) {
+                    // When returning to bank, it should restore its initial size
                     sizeIconsOnLoad();
                 } else {
                     piece.style.width = '';
