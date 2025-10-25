@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (修改器官11)</title>
+    <title>器官拼圖 (v3)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -50,7 +50,6 @@
         #puzzle-area {
             flex: 2;
             position: relative;
-            /* MODIFIED: Background image path updated */
             background-image: url('./images/organ1_body.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -58,6 +57,18 @@
             border: 2px dashed #ccc;
             border-radius: 10px;
             overflow: hidden;
+        }
+        
+        /* MODIFIED: Added static label style */
+        .static-label {
+            position: absolute;
+            top: 10%;
+            left: 70%;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            z-index: 2;
+            pointer-events: none; /* Make it unclickable */
         }
 
         #pieces-bank {
@@ -134,12 +145,11 @@
 
         .drop-zone.filled { border: none; background: none; }
 
-        /* Drop Zone Positions */
+        /* MODIFIED: Drop Zone Positions Updated (Gallbladder removed) */
         #drop-mouth-img { top: 16%; left: 42%; width: 9%; height: 5.5%; }
         #drop-pharynx-img { top: 17.5%; left: 50%; width: 2%; height: 5.5%; }
         #drop-esophagus-img { top: 22.5%; left: 50.5%; width: 3%; height: 18%; }
         #drop-liver-img { top: 40%; left: 38%; width: 15%; height: 10%; }
-        #drop-gallbladder-img { top: 48%; left: 42%; width: 5%; height: 5%; }
         #drop-stomach-img { top: 40.5%; left: 48%; width: 12%; height: 13%; }
         #drop-pancreas-img { top: 49%; left: 43%; width: 12%; height: 8%; }
         #drop-large-intestine-img { top: 53%; left: 38%; width: 25%; height: 24%; }
@@ -148,11 +158,11 @@
         #drop-pharynx-label { top: 19%; left: 70%; width: 10%; height: 5%; }
         #drop-esophagus-label { top: 27%; left: 70%; width: 10%; height: 5%; }
         #drop-liver-label { top: 35%; left: 10%; width: 10%; height: 5%; }
-        #drop-gallbladder-label { top: 40%; left: 10%; width: 10%; height: 5%; }
         #drop-stomach-label { top: 42%; left: 70%; width: 10%; height: 5%; }
         #drop-pancreas-label { top: 52%; left: 55%; width: 10%; height: 5%; }
         #drop-small-intestine-label { top: 48%; left: 70%; width: 10%; height: 5%; }
         #drop-large-intestine-label { top: 55%; left: 70%; width: 10%; height: 5%; }
+
 
         .controls {
             width: 95%;
@@ -183,7 +193,10 @@
     <p>請將器官的圖示和器官的名稱拖到畫面上，並放置到正確的位置</p>
 
     <div class="game-container">
-        <div id="puzzle-area"></div>
+        <div id="puzzle-area">
+            <div class="static-label">消化道</div>
+        </div>
+        
         <div id="pieces-bank">
             <h3>圖示</h3>
             <div id="organ-pieces"></div>
@@ -207,21 +220,25 @@
             const checkBtn = document.getElementById('check-btn');
             const nextPageBtn = document.getElementById('next-page-btn');
 
+            /* MODIFIED: piecesData updated:
+               - Removed 'gallbladder' icon
+               - Removed 'gallbladder' label
+               - Changed 'liver' label name to '肝與膽'
+            */
             const piecesData = [
                 { type: 'icon', id_part: 'mouth-img', name: '口腔', fileName: 'mouth' },
                 { type: 'icon', id_part: 'pharynx-img', name: '咽', fileName: 'pharynx' },
                 { type: 'icon', id_part: 'esophagus-img', name: '食道', fileName: 'esophagus' },
                 { type: 'icon', id_part: 'liver-img', name: '肝', fileName: 'liver' },
-                { type: 'icon', id_part: 'gallbladder-img', name: '膽', fileName: 'gallbladder' },
                 { type: 'icon', id_part: 'stomach-img', name: '胃', fileName: 'stomach' },
                 { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
                 { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
                 { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
+                
                 { type: 'label', id_part: 'mouth-label', name: '口腔' },
                 { type: 'label', id_part: 'pharynx-label', name: '咽' },
                 { type: 'label', id_part: 'esophagus-label', name: '食道' },
-                { type: 'label', id_part: 'liver-label', name: '肝' },
-                { type: 'label', id_part: 'gallbladder-label', name: '膽' },
+                { type: 'label', id_part: 'liver-label', name: '肝與膽' },
                 { type: 'label', id_part: 'stomach-label', name: '胃' },
                 { type: 'label', id_part: 'pancreas-label', name: '胰臟' },
                 { type: 'label', id_part: 'small-intestine-label', name: '小腸' },
@@ -232,7 +249,6 @@
                 let elem;
                 if (p.type === 'icon') {
                     elem = document.createElement('img');
-                    // MODIFIED: Organ icon path updated
                     elem.src = `./images/organ1_${p.fileName}.png`;
                     elem.classList.add('draggable-icon');
                     elem.addEventListener('error', () => { elem.style.border = '1px solid red'; elem.alt = `${p.fileName} 圖片遺失`; });
