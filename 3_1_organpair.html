@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (v4 - 錯誤修正)</title>
+    <title>器官拼圖 (v5 - 自由定位版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -61,7 +61,7 @@
         
         .static-label {
             position: absolute;
-            top: 7%; /* MODIFIED: Position updated */
+            top: 7%;
             left: 70%;
             font-size: 1.2em;
             font-weight: bold;
@@ -100,6 +100,9 @@
             cursor: grab;
             transition: transform 0.2s;
             touch-action: none;
+            /* MODIFIED: Add style for correct pieces */
+            border: 2px solid transparent; 
+            box-sizing: border-box; /* Ensure border doesn't change size */
         }
         
         .draggable-icon {
@@ -131,28 +134,27 @@
             background-color: var(--drop-zone-bg);
             border: 1px dashed var(--drop-zone-border);
             border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 1;
+            /* MODIFIED: Remove flex properties, it's just a target */
         }
 
         .drop-zone.hover {
             background-color: var(--drop-zone-hover-bg);
             border: 2px solid var(--accent-color);
         }
+        
+        /* MODIFIED: .filled is no longer used */
+        /* .drop-zone.filled { border: none; background: none; } */
 
-        .drop-zone.filled { border: none; background: none; }
-
-        /* Drop Zone Positions & Layering Updated */
+        /* Drop Zone Positions & Layering */
         #drop-mouth-img { top: 16%; left: 42%; width: 9%; height: 5.5%; }
         #drop-pharynx-img { top: 17.5%; left: 50%; width: 2%; height: 5.5%; }
         #drop-esophagus-img { top: 22.5%; left: 50.5%; width: 3%; height: 18%; }
-        #drop-liver-img { top: 40%; left: 38%; width: 15%; height: 10%; z-index: 4; } /* MODIFIED: z-index */
-        #drop-stomach-img { top: 40.5%; left: 48%; width: 12%; height: 13%; z-index: 2; } /* MODIFIED: z-index */
+        #drop-liver-img { top: 40%; left: 38%; width: 15%; height: 10%; z-index: 4; }
+        #drop-stomach-img { top: 40.5%; left: 48%; width: 12%; height: 13%; z-index: 2; }
         #drop-pancreas-img { top: 49%; left: 43%; width: 12%; height: 8%; }
-        #drop-large-intestine-img { top: 53%; left: 38%; width: 25%; height: 24%; z-index: 3; } /* MODIFIED: z-index */
-        #drop-small-intestine-img { top: 46%; left: 40%; width: 20%; height: 28%; z-index: 2; } /* MODIFIED: z-index */
+        #drop-large-intestine-img { top: 53%; left: 38%; width: 25%; height: 24%; z-index: 3; }
+        #drop-small-intestine-img { top: 46%; left: 40%; width: 20%; height: 28%; z-index: 2; }
         
         #drop-mouth-label { top: 12%; left: 70%; width: 10%; height: 5%; }
         #drop-pharynx-label { top: 19%; left: 70%; width: 10%; height: 5%; }
@@ -276,7 +278,7 @@
             }
             setTimeout(sizeIconsOnLoad, 100);
 
-            // --- Drag and Drop Logic (BUG FIXED) ---
+            // --- Drag and Drop Logic (No Snapping) ---
             let activeDraggable = null;
             let isDragging = false;
             let startX, startY, initialOffsetX, initialOffsetY;
@@ -287,7 +289,6 @@
                 const event = e.touches ? e.touches[0] : e;
                 startX = event.clientX;
                 startY = event.clientY;
-                // MODIFIED: Offset calculation is REMOVED from here to prevent "jump" bug
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
                 document.addEventListener('touchmove', onMouseMove, { passive: false });
@@ -301,9 +302,9 @@
                 if (!isDragging) {
                     const dx = event.clientX - startX;
                     const dy = event.clientY - startY;
-                    if (Math.sqrt(dx * dx + dy * dy) > 5) { // Drag threshold
+                    if (Math.sqrt(dx * dx + dy * dy) > 5) {
                         isDragging = true;
-                        initiateDrag(activeDraggable, event); // MODIFIED: Pass event
+                        initiateDrag(activeDraggable, event); 
                     }
                 }
                 if (isDragging) {
@@ -313,8 +314,8 @@
             
             function onMouseUp(e) {
                 if (isDragging) {
-                    const event = e.changedTouches ? e.changedTouches[0] : e;
-                    snapToDropZone(activeDraggable, event.clientX, event.clientY);
+                    // MODIFIED: No snapping! Just clear hovers.
+                    dropZones.forEach(zone => zone.classList.remove('hover'));
                 }
                 if (activeDraggable) {
                     activeDraggable.classList.remove('dragging');
@@ -327,17 +328,17 @@
                 document.removeEventListener('touchend', onMouseUp);
             }
 
-            function initiateDrag(draggable, event) { // MODIFIED: Accepts event
+            function initiateDrag(draggable, event) { 
                 draggable.classList.add('dragging');
                 if (draggable.parentElement.id !== 'puzzle-area') {
                     const rect = draggable.getBoundingClientRect();
                     puzzleArea.appendChild(draggable);
                     draggable.classList.add('on-board');
+                    // MODIFIED: Set width/height *once* to prevent deformation
                     draggable.style.width = `${rect.width}px`;
                     draggable.style.height = `${rect.height}px`;
                 }
                 
-                // MODIFIED: Offset calculation moved HERE for accuracy
                 const currentRect = draggable.getBoundingClientRect();
                 const currentEvent = event.touches ? event.touches[0] : event;
                 initialOffsetX = currentEvent.clientX - currentRect.left;
@@ -371,48 +372,49 @@
                 });
             }
 
-            function snapToDropZone(draggable, x, y) {
-                 dropZones.forEach(zone => {
-                    zone.classList.remove('hover');
-                    const rect = zone.getBoundingClientRect();
-                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-                       if(zone.children.length === 0){
-                           zone.appendChild(draggable);
-                           draggable.classList.remove('on-board');
-                           draggable.style.position = 'relative';
-                           draggable.style.left = '0';
-                           draggable.style.top = '0';
-                           draggable.style.width = '100%';
-                           draggable.style.height = '100%';
-                           zone.classList.add('filled');
-                           
-                           // MODIFIED: (BUG FIX) Re-apply object-fit to prevent deformation
-                           if (draggable.classList.contains('draggable-icon')) {
-                                draggable.style.objectFit = 'contain';
-                           }
-                       }
-                    }
-                });
-            }
+            // MODIFIED: snapToDropZone function is completely REMOVED
 
+            // MODIFIED: New Check Button Logic (Positional)
             checkBtn.addEventListener('click', () => {
                 let correctCount = 0;
-                dropZones.forEach(zone => {
-                    zone.style.border = '1px dashed var(--drop-zone-border)';
-                    if (zone.children.length > 0) {
-                        const droppedElement = zone.children[0];
-                        if (droppedElement.id === zone.dataset.correctId) {
+                const totalPieces = draggables.length;
+
+                draggables.forEach(piece => {
+                    const dropZone = document.getElementById(piece.id.replace('drag-', 'drop-'));
+                    
+                    // Reset visuals first
+                    piece.style.border = piece.classList.contains('draggable-label') ? '2px solid var(--accent-color)' : '2px solid transparent';
+                    dropZone.style.border = '1px dashed var(--drop-zone-border)';
+
+                    if (piece.classList.contains('on-board')) {
+                        const pieceRect = piece.getBoundingClientRect();
+                        const zoneRect = dropZone.getBoundingClientRect();
+
+                        // Check if the center of the piece is inside the drop zone
+                        const pieceCenterX = pieceRect.left + pieceRect.width / 2;
+                        const pieceCenterY = pieceRect.top + pieceRect.height / 2;
+
+                        const isCorrect = (
+                            pieceCenterX > zoneRect.left &&
+                            pieceCenterX < zoneRect.right &&
+                            pieceCenterY > zoneRect.top &&
+                            pieceCenterY < zoneRect.bottom
+                        );
+
+                        if (isCorrect) {
                             correctCount++;
-                            zone.style.border = '2px solid var(--correct-color)';
+                            // Show correct: Green border on piece and zone
+                            piece.style.border = '2px solid var(--correct-color)';
+                            dropZone.style.border = '2px solid var(--correct-color)';
                         } else {
-                            resetPiece(droppedElement);
-                            zone.classList.remove('filled');
+                            // Wrong position, reset
+                            resetPiece(piece);
                         }
                     }
+                    // Else: piece is still in the bank, do nothing.
                 });
-                const floatingPieces = puzzleArea.querySelectorAll('.draggable.on-board');
-                floatingPieces.forEach(resetPiece);
-                if (correctCount === dropZones.length) {
+
+                if (correctCount === totalPieces) {
                     alert('恭喜你，全部都答對了！');
                     nextPageBtn.classList.remove('disabled');
                 } else {
@@ -427,9 +429,13 @@
                 piece.style.position = '';
                 piece.style.left = '';
                 piece.style.top = '';
+                
+                // Reset border style
+                piece.style.border = piece.classList.contains('draggable-label') ? '2px solid var(--accent-color)' : '2px solid transparent';
+                
                 if(piece.classList.contains('draggable-icon')) {
-                    sizeIconsOnLoad();
-                    piece.style.objectFit = 'contain'; // Ensure it's correct when back in bank
+                    sizeIconsOnLoad(); // Reset to original bank size
+                    piece.style.objectFit = 'contain';
                 } else {
                     piece.style.width = '';
                     piece.style.height = '';
