@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (v7 - 修正空白頁面)</title>
+    <title>器官拼圖 (v8 - 最終版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -156,4 +156,74 @@
         
         #drop-mouth-label { top: 12%; left: 70%; width: 10%; height: 5%; }
         #drop-pharynx-label { top: 19%; left: 70%; width: 10%; height: 5%; }
-        #drop-esophagus-label { top: 27%; left: 70%;
+        #drop-esophagus-label { top: 27%; left: 70%; width: 10%; height: 5%; }
+        #drop-liver-label { top: 35%; left: 10%; width: 10%; height: 5%; }
+        #drop-stomach-label { top: 42%; left: 70%; width: 10%; height: 5%; }
+        #drop-pancreas-label { top: 52%; left: 55%; width: 10%; height: 5%; }
+        #drop-small-intestine-label { top: 48%; left: 70%; width: 10%; height: 5%; }
+        #drop-large-intestine-label { top: 55%; left: 70%; width: 10%; height: 5%; }
+
+        .controls {
+            width: 95%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .nav-button, #check-btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        #check-btn { background-color: var(--accent-color); color: white; }
+        .nav-button { background-color: #6c757d; color: white; text-decoration: none; }
+        #next-page-btn.disabled { background-color: #ccc; cursor: not-allowed; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <h1>器官拼圖</h1>
+    <p>請將器官的圖示和器官的名稱拖到畫面上，並放置到正確的位置</p>
+
+    <div class="game-container">
+        <div id="puzzle-area">
+            <div class="static-label">消化道</div>
+        </div>
+        <div id="pieces-bank">
+            <h3>圖示</h3>
+            <div id="organ-pieces"></div>
+            <hr>
+            <h3>名稱</h3>
+            <div id="label-pieces"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <a href="3_codepair.html" class="nav-button">上一頁</a>
+        <button id="check-btn">檢查</button>
+        <a href="4_digestivetract.html" id="next-page-btn" class="nav-button disabled">下一頁</a>
+    </div>
+
+    <script>
+        const puzzleArea = document.getElementById('puzzle-area');
+        const organPiecesContainer = document.getElementById('organ-pieces');
+        const labelPiecesContainer = document.getElementById('label-pieces');
+        const checkBtn = document.getElementById('check-btn');
+        const nextPageBtn = document.getElementById('next-page-btn');
+
+        const piecesData = [
+            { type: 'icon', id_part: 'mouth-img', name: '口腔', fileName: 'mouth' },
+            { type: 'icon', id_part: 'pharynx-img', name: '咽', fileName: 'pharynx' },
+            { type: 'icon', id_part: 'esophagus-img', name: '食道', fileName: 'esophagus' },
+            { type: 'icon', id_part: 'liver-img', name: '肝', fileName: 'liver' },
+            { type: 'icon', id_part: 'stomach-img', name: '胃', fileName: 'stomach' },
+            { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
+            { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
+            { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
+            { type: 'label', id_part: 'mouth-label', name: '口腔' },
+            { type: 'label', id_part: 'pharynx-label', name: '咽' },
+            { type: 'label', id_
