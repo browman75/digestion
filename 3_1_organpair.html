@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>器官拼圖 (v8 - 最終版)</title>
+    <title>器官拼圖 (v9 - 穩定版)</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -209,21 +209,226 @@
     </div>
 
     <script>
-        const puzzleArea = document.getElementById('puzzle-area');
-        const organPiecesContainer = document.getElementById('organ-pieces');
-        const labelPiecesContainer = document.getElementById('label-pieces');
-        const checkBtn = document.getElementById('check-btn');
-        const nextPageBtn = document.getElementById('next-page-btn');
+        document.addEventListener('DOMContentLoaded', () => {
+            const puzzleArea = document.getElementById('puzzle-area');
+            const organPiecesContainer = document.getElementById('organ-pieces');
+            const labelPiecesContainer = document.getElementById('label-pieces');
+            const checkBtn = document.getElementById('check-btn');
+            const nextPageBtn = document.getElementById('next-page-btn');
 
-        const piecesData = [
-            { type: 'icon', id_part: 'mouth-img', name: '口腔', fileName: 'mouth' },
-            { type: 'icon', id_part: 'pharynx-img', name: '咽', fileName: 'pharynx' },
-            { type: 'icon', id_part: 'esophagus-img', name: '食道', fileName: 'esophagus' },
-            { type: 'icon', id_part: 'liver-img', name: '肝', fileName: 'liver' },
-            { type: 'icon', id_part: 'stomach-img', name: '胃', fileName: 'stomach' },
-            { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
-            { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
-            { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
-            { type: 'label', id_part: 'mouth-label', name: '口腔' },
-            { type: 'label', id_part: 'pharynx-label', name: '咽' },
-            { type: 'label', id_
+            const piecesData = [
+                { type: 'icon', id_part: 'mouth-img', name: '口腔', fileName: 'mouth' },
+                { type: 'icon', id_part: 'pharynx-img', name: '咽', fileName: 'pharynx' },
+                { type: 'icon', id_part: 'esophagus-img', name: '食道', fileName: 'esophagus' },
+                { type: 'icon', id_part: 'liver-img', name: '肝', fileName: 'liver' },
+                { type: 'icon', id_part: 'stomach-img', name: '胃', fileName: 'stomach' },
+                { type: 'icon', id_part: 'pancreas-img', name: '胰臟', fileName: 'pancreas' },
+                { type: 'icon', id_part: 'large-intestine-img', name: '大腸', fileName: 'large_intestine' },
+                { type: 'icon', id_part: 'small-intestine-img', name: '小腸', fileName: 'small_intestine' },
+                { type: 'label', id_part: 'mouth-label', name: '口腔' },
+                { type: 'label', id_part: 'pharynx-label', name: '咽' },
+                { type: 'label', id_part: 'esophagus-label', name: '食道' },
+                { type: 'label', id_part: 'liver-label', name: '肝與膽' },
+                { type: 'label', id_part: 'stomach-label', name: '胃' },
+                { type: 'label', id_part: 'pancreas-label', name: '胰臟' },
+                { type: 'label', id_part: 'small-intestine-label', name: '小腸' },
+                { type: 'label', id_part: 'large-intestine-label', name: '大腸與肛門' }
+            ];
+
+            piecesData.forEach(p => {
+                let elem;
+                if (p.type === 'icon') {
+                    elem = document.createElement('img');
+                    elem.src = `./images/organ1_${p.fileName}.png`;
+                    elem.classList.add('draggable-icon');
+                    elem.addEventListener('error', () => { elem.style.border = '1px solid red'; elem.alt = `${p.fileName} 圖片遺失`; });
+                    organPiecesContainer.appendChild(elem);
+                } else {
+                    elem = document.createElement('div');
+                    elem.textContent = p.name;
+                    elem.classList.add('draggable-label');
+                    labelPiecesContainer.appendChild(elem);
+                }
+                elem.id = `drag-${p.id_part}`;
+                elem.classList.add('draggable');
+                elem.dataset.originalParent = elem.parentElement.id;
+                const zone = document.createElement('div');
+                zone.id = `drop-${p.id_part}`;
+                zone.classList.add('drop-zone');
+                zone.dataset.correctId = `drag-${p.id_part}`;
+                puzzleArea.appendChild(zone);
+            });
+            
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            function sizeIconsOnLoad() {
+                const icons = document.querySelectorAll('.draggable-icon');
+                icons.forEach(icon => {
+                    const dropZoneId = icon.id.replace('drag-', 'drop-');
+                    const dropZone = document.getElementById(dropZoneId);
+                    if (dropZone) {
+                        const dzRect = dropZone.getBoundingClientRect();
+                        icon.style.width = `${dzRect.width}px`;
+                        icon.style.height = `${dzRect.height}px`;
+                    }
+                });
+            }
+            setTimeout(sizeIconsOnLoad, 100);
+
+
+            // --- Drag and Drop Logic (No Snapping) ---
+            let activeDraggable = null;
+            let isDragging = false;
+            let startX, startY, initialOffsetX, initialOffsetY;
+
+            function onMouseDown(e) {
+                activeDraggable = this;
+                isDragging = false;
+                const event = e.touches ? e.touches[0] : e;
+                startX = event.clientX;
+                startY = event.clientY;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                document.addEventListener('touchmove', onMouseMove, { passive: false });
+                document.addEventListener('touchend', onMouseUp);
+            }
+
+            function onMouseMove(e) {
+                if (!activeDraggable) return;
+                e.preventDefault();
+                const event = e.touches ? e.touches[0] : e;
+                if (!isDragging) {
+                    const dx = event.clientX - startX;
+                    const dy = event.clientY - startY;
+                    if (Math.sqrt(dx * dx + dy * dy) > 5) {
+                        isDragging = true;
+                        initiateDrag(activeDraggable, event); 
+                    }
+                }
+                if (isDragging) {
+                    moveDraggable(event);
+                }
+            }
+            
+            function onMouseUp(e) {
+                if (isDragging) {
+                    dropZones.forEach(zone => zone.classList.remove('hover'));
+                }
+                if (activeDraggable) {
+                    activeDraggable.classList.remove('dragging');
+                }
+                activeDraggable = null;
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('touchmove', onMouseMove);
+                document.removeEventListener('touchend', onMouseUp);
+            }
+
+            function initiateDrag(draggable, event) { 
+                draggable.classList.add('dragging');
+                if (draggable.parentElement.id !== 'puzzle-area') {
+                    const rect = draggable.getBoundingClientRect();
+                    puzzleArea.appendChild(draggable);
+                    draggable.classList.add('on-board');
+                    draggable.style.width = `${rect.width}px`;
+                    draggable.style.height = `${rect.height}px`;
+                }
+                
+                const currentRect = draggable.getBoundingClientRect();
+                const currentEvent = event.touches ? event.touches[0] : event;
+                initialOffsetX = currentEvent.clientX - currentRect.left;
+                initialOffsetY = currentEvent.clientY - currentRect.top;
+            }
+            
+            function moveDraggable(event) {
+                const puzzleRect = puzzleArea.getBoundingClientRect();
+                let x = event.clientX - puzzleRect.left - initialOffsetX;
+                let y = event.clientY - puzzleRect.top - initialOffsetY;
+                x = Math.max(0, Math.min(x, puzzleRect.width - activeDraggable.offsetWidth));
+                y = Math.max(0, Math.min(y, puzzleRect.height - activeDraggable.offsetHeight));
+                activeDraggable.style.left = `${x}px`;
+                activeDraggable.style.top = `${y}px`;
+                checkDropZoneHover(event.clientX, event.clientY);
+            }
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('mousedown', onMouseDown);
+                draggable.addEventListener('touchstart', onMouseDown, { passive: true });
+            });
+            
+            function checkDropZoneHover(x, y) {
+                dropZones.forEach(zone => {
+                    const rect = zone.getBoundingClientRect();
+                    if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
+                        zone.classList.add('hover');
+                    } else {
+                        zone.classList.remove('hover');
+                    }
+                });
+            }
+
+            // --- Check Button Logic (Positional) ---
+            checkBtn.addEventListener('click', () => {
+                let correctCount = 0;
+                const totalPieces = draggables.length;
+
+                draggables.forEach(piece => {
+                    const dropZone = document.getElementById(piece.id.replace('drag-', 'drop-'));
+                    
+                    piece.style.border = piece.classList.contains('draggable-label') ? '2px solid var(--accent-color)' : '2px solid transparent';
+                    dropZone.style.border = '1px dashed var(--drop-zone-border)';
+
+                    if (piece.classList.contains('on-board')) {
+                        const pieceRect = piece.getBoundingClientRect();
+                        const zoneRect = dropZone.getBoundingClientRect();
+                        const pieceCenterX = pieceRect.left + pieceRect.width / 2;
+                        const pieceCenterY = pieceRect.top + pieceRect.height / 2;
+                        const isCorrect = (
+                            pieceCenterX > zoneRect.left &&
+                            pieceCenterX < zoneRect.right &&
+                            pieceCenterY > zoneRect.top &&
+                            pieceCenterY < zoneRect.bottom
+                        );
+
+                        if (isCorrect) {
+                            correctCount++;
+                            piece.style.border = '2px solid var(--correct-color)';
+                            dropZone.style.border = '2px solid var(--correct-color)';
+                        } else {
+                            resetPiece(piece);
+                        }
+                    }
+                });
+
+                if (correctCount === totalPieces) {
+                    alert('恭喜你，全部都答對了！');
+                    nextPageBtn.classList.remove('disabled');
+                } else {
+                    alert(`答對了 ${correctCount} 個，請繼續加油！`);
+                }
+            });
+            
+            function resetPiece(piece) {
+                const originalParent = document.getElementById(piece.dataset.originalParent);
+                if (originalParent) { originalParent.appendChild(piece); }
+                piece.classList.remove('on-board');
+                piece.style.position = '';
+                piece.style.left = '';
+                piece.style.top = '';
+                
+                piece.style.border = piece.classList.contains('draggable-label') ? '2px solid var(--accent-color)' : '2px solid transparent';
+                
+                if(piece.classList.contains('draggable-icon')) {
+                    sizeIconsOnLoad(); 
+                    piece.style.objectFit = 'contain';
+                } else {
+                    piece.style.width = '';
+                    piece.style.height = '';
+                }
+            }
+        }); // End of DOMContentLoaded
+    </script>
+</body>
+</html>
