@@ -1,404 +1,405 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>生物消化系統線上測驗V2</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', 'Noto Sans TC', sans-serif;
-        }
-        .quiz-option.correct {
-            background-color: #d1fae5;
-            border-color: #10b981;
-        }
-        .quiz-option.incorrect {
-            background-color: #fee2e2;
-            border-color: #ef4444;
-        }
-        .quiz-option.selected {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
-        }
-        .feedback-hint {
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            padding: 1rem;
-            margin-top: 0.5rem;
-            border-radius: 0.25rem;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物消化系統線上測驗V1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .quiz-option.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+        }
+        .feedback-hint {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0.25rem;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl mx-auto my-8">
-        
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between mb-6 border-b pb-4">
-            <a href="9_exam.html" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
-                &larr; 上一頁
-            </a>
-            <a href="index.html" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
-                回到首頁
-            </a>
-        </div>
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-4xl mx-auto my-8">
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mb-6 border-b pb-4">
+            <a href="9_exam.html" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                &larr; 上一頁
+            </a>
+            <a href="index.html" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                回到首頁
+            </a>
+        </div>
 
-        <div id="quiz-container">
-            <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-2">生物消化系統線上測驗</h1>
-            <p class="text-center text-gray-500 mb-6">請填寫您的資料並開始作答。</p>
-            
-            <!-- Student Info Form -->
-            <form id="student-info-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div>
-                    <label for="student-class" class="block text-sm font-medium text-gray-700">班級</label>
-                    <input type="text" id="student-class" name="student-class" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="例如：701">
-                </div>
-                <div>
-                    <label for="student-seatnum" class="block text-sm font-medium text-gray-700">座號</label>
-                    <input type="text" id="student-seatnum" name="student-seatnum" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="例如：01">
-                </div>
-                <div>
-                    <label for="student-name" class="block text-sm font-medium text-gray-700">姓名</label>
-                    <input type="text" id="student-name" name="student-name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="請輸入全名">
-                </div>
-            </form>
+        <div id="quiz-container">
+            <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-2">生物消化系統線上測驗</h1>
+            <p class="text-center text-gray-500 mb-6">請填寫您的資料並開始作答。</p>
+            
+            <!-- Student Info Form -->
+            <form id="student-info-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div>
+                    <label for="student-class" class="block text-sm font-medium text-gray-700">班級</label>
+                    <input type="text" id="student-class" name="student-class" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="例如：701">
+                </div>
+                <div>
+                    <label for="student-seatnum" class="block text-sm font-medium text-gray-700">座號</label>
+                    <input type="text" id="student-seatnum" name="student-seatnum" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="例如：01">
+                </div>
+                <div>
+                    <label for="student-name" class="block text-sm font-medium text-gray-700">姓名</label>
+                    <input type="text" id="student-name" name="student-name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="請輸入全名">
+                </div>
+            </form>
 
-            <!-- Quiz Questions Area -->
-            <div id="questions-wrapper" class="space-y-8"></div>
+            <!-- Quiz Questions Area -->
+            <div id="questions-wrapper" class="space-y-8"></div>
 
-            <!-- Submit Button -->
-            <div class="mt-8 text-center">
-                <button id="submit-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-12 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-transform transform hover:scale-105">
-                    提交答案
-                </button>
-            </div>
-        </div>
+            <!-- Submit Button -->
+            <div class="mt-8 text-center">
+                <button id="submit-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-12 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-transform transform hover:scale-105">
+                    提交答案
+                </button>
+            </div>
+        </div>
 
-        <!-- Result Modal/View -->
-        <div id="result-container" class="hidden text-center">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">測驗結果</h2>
-            <div id="score" class="text-5xl font-bold text-blue-600 mb-6"></div>
-            <div id="feedback-section" class="text-left mb-6"></div>
-            <div id="analysis-section" class="bg-blue-50 p-6 rounded-lg text-left mb-6 hidden">
-                <h3 class="text-xl font-bold text-blue-800 mb-3">學習分析與建議</h3>
-                <p id="analysis-text" class="text-gray-700"></p>
-            </div>
-            <div id="result-buttons" class="flex flex-col sm:flex-row gap-4 justify-center">
-                 <button id="resubmit-btn" class="w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-4 focus:ring-amber-300 transition-transform transform hover:scale-105 hidden">
-                    修正答案再試一次
-                </button>
-                <button id="restart-btn" class="w-full sm:w-auto bg-gray-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-300 transition-transform transform hover:scale-105">
-                    重新測驗
-                </button>
-            </div>
-        </div>
+        <!-- Result Modal/View -->
+        <div id="result-container" class="hidden text-center">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">測驗結果</h2>
+            <div id="score" class="text-5xl font-bold text-blue-600 mb-6"></div>
+            <div id="feedback-section" class="text-left mb-6"></div>
+            <div id="analysis-section" class="bg-blue-50 p-6 rounded-lg text-left mb-6 hidden">
+                <h3 class="text-xl font-bold text-blue-800 mb-3">學習分析與建議</h3>
+                <p id="analysis-text" class="text-gray-700"></p>
+            </div>
+            <div id="result-buttons" class="flex flex-col sm:flex-row gap-4 justify-center">
+                 <button id="resubmit-btn" class="w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-4 focus:ring-amber-300 transition-transform transform hover:scale-105 hidden">
+                    修正答案再試一次
+                </button>
+                <button id="restart-btn" class="w-full sm:w-auto bg-gray-500 text-white font-bold py-3 px-12 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-300 transition-transform transform hover:scale-105">
+                    重新測驗
+                </button>
+            </div>
+        </div>
 
-    </div>
+    </div>
 
-    <script>
-        // ===================================================================================
-        // !! 請注意 !!
-        // 這裡是您從 Google Apps Script 部署後取得的網址
-        // ===================================================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx31hgS79e67gvhzzTMiMk7FOMipBMpPmw6-kB18iFfPVMIJjo9MTbSn0ixNjelqIToqA/exec';
+    <script>
+        // ===================================================================================
+        // !! 請注意 !!
+        // 這裡是您從 Google Apps Script 部署後取得的網址
+        // ===================================================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx31hgS79e67gvhzzTMiMk7FOMipBMpPmw6-kB18iFfPVMIJjo9MTbSn0ixNjelqIToqA/exec';
 
-        const quizData = [
-            {
-                question: "近年來，臺灣興起一股「植物肉」的飲食風潮，許多業者推出以植物性原料製成的漢堡肉、香腸等，以模仿動物肉的口感與風味。這些植物肉的出現，反映了現代人對於健康飲食、動物福利及環境永續的關注。然而，不同來源的蛋白質，其消化吸收的過程與效率可能有所差異。請問，下列關於蛋白質消化與吸收的敘述，何者正確？",
-                options: { A: "蛋白質在口腔中即可開始初步消化。", B: "小腸的酵素則能蛋白質分解成葡萄糖。", C: "蛋白質的消化產物為胺基酸，這些胺基酸主要在胃部被吸收進入血液循環。", D: "蛋白質在胃和小腸中被消化分解成胺基酸，最後主要在小腸被吸收。" },
-                answer: 'D',
-                hint: "思考一下蛋白質的消化旅程：它在哪個器官第一次被分解？最終在哪個器官被分解成最小分子並吸收呢？",
-                topic: '蛋白質的消化與吸收'
-            },
-            {
-                question: "「食安」是民眾關心的熱門議題。新聞報導指出，某知名連鎖速食店的炸雞，雖然口感酥脆，但其脂肪含量偏高，長期攝取可能增加健康負擔。炸雞中的主要能量來源是脂肪，而脂肪的消化過程相當複雜，需要多種消化液的協同作用。請問，下列哪一項敘述最符合脂肪在人體消化道內的消化過程？",
-                options: { A: "脂肪在口腔和胃中即可被初步分解為脂肪酸和甘油，並開始被吸收。", B: "膽汁能將大分子脂肪乳化成小脂肪滴，增加脂肪與脂肪酶接觸的表面積，接著由胰液中的脂肪酶將其分解。", C: "脂肪主要在胃部被分解，其消化產物為胺基酸，可直接被胃壁吸收。", D: "食物中的脂肪主要由唾液分解，並在小腸被吸收，其產物為醣類。" },
-                answer: 'B',
-                hint: "脂肪的消化需要一個特別的步驟叫做「乳化」，是哪一種消化液負責這個工作？它在哪裡發揮作用？",
-                topic: '脂肪的消化與吸收'
-            },
-            {
-                question: "新聞報導中常提到「益生菌」對人體腸道健康的好處。益生菌是指對宿主有益的活菌，它們在腸道內可以幫助消化、抑制壞菌生長。而人體的消化系統中，消化道和消化腺扮演著不同的角色。下列關於消化道與消化腺功能的敘述，何者正確？",
-                options: { A: "消化道主要負責分泌消化液，而消化腺則負責將食物分解。", B: "消化腺如肝臟和胰臟，它們分泌的消化液在口腔中開始作用，幫助食物分解。", C: "消化道是食物通過的管道，負責食物的攪拌、蠕動與吸收，而消化腺則分泌消化液來分解食物。", D: "消化道如胃和腸，它們主要負責分泌消化酵素，而消化腺如食道和肛門，則負責食物的運輸。" },
-                answer: 'C',
-                hint: "回想一下消化系統的兩大組成部分：一個是食物實際通過的「管道」，另一個是製造「消化液」的工廠。它們各自的名稱和功能是什麼？",
-                topic: '消化系統的結構與功能'
-            },
-            {
-                question: "根據聯合國糧食及農業組織（FAO）的數據，全球人口不斷增長，對糧食的需求也日益增加。為了解決糧食危機並減少對環境的衝擊，科學家們正積極研發各種新型態的食物來源，例如從植物中提取蛋白質，製成更接近動物肉的「植物肉」。這些植物肉的生產過程，需要將植物中的蛋白質分解成小分子才能被人體吸收利用。請問，這個分解過程與下列哪一種生理作用最為相關？",
-                options: { A: "光合作用", B: "呼吸作用", C: "消化作用", D: "合成作用" },
-                answer: 'C',
-                hint: "將食物中的大分子養分（如蛋白質）分解成身體可吸收的小分子（如胺基酸），這個過程我們稱之為什麼？",
-                topic: '消化作用的定義'
-            },
-            {
-                question: "現代人生活忙碌，常以外食為主，而外食族容易攝取過多精緻澱粉和高油脂食物，長期下來可能導致肥胖、心血管疾病等問題。因此，了解食物的營養成分並做出健康選擇至關重要。某份速食餐點的營養標示顯示：蛋白質3.9g, 脂肪8.0g, 碳水化合物33.9g, 鈉328.6mg。請問下列關於此餐點成分的推論，何者最為合理？",
-                options: { A: "此餐點主要提供能量的養分是蛋白質，每份約可提供3.9大卡的熱量。", B: "此餐點的脂肪含量相當高，其提供的熱量約為23大卡。", C: "此餐點提供的碳水化合物熱量約為135.6大卡，但其中不含任何維生素。", D: "此餐點的碳水化合物含量最高，是主要的能量來源。" },
-                answer: 'D',
-                hint: "記得三大營養素的熱量嗎？蛋白質和碳水化合物每公克約4大卡，脂肪約9大卡。算算看哪種營養素提供的總熱量最多？",
-                topic: '養分與熱量計算'
-            },
-            {
-                question: "古代醫學家認為「脾胃乃後天之本」，強調消化系統對人體健康的重要性。消化系統的各個器官分工合作，共同完成食物的消化吸收。承接上一題的速食餐點營養標示，其中含有豐富的碳水化合物，而碳水化合物的消化過程始於口腔。請問，下列關於口腔在消化過程中扮演的角色，何者最為貼切？",
-                options: { A: "口腔主要分泌胃液，負責分解蛋白質。", B: "口腔中的唾液含有澱粉酶，能將部分澱粉分解成麥芽糖。", C: "口腔負責乳化脂肪，以便後續消化。", D: "口腔能分泌膽汁，幫助消化蛋白質。" },
-                answer: 'B',
-                hint: "我們吃米飯或麵包時，在嘴裡多嚼幾下會感覺到甜味，這是因為哪一種養分被初步分解了？是由什麼酵素作用的呢？",
-                topic: '各消化器官的功能'
-            },
-            {
-                question: "一項研究顯示，許多現代人因工作壓力大，飲食不規律，容易出現胃部不適，如胃酸過多、消化不良等。胃液中的胃酸（鹽酸）除了有殺菌作用外，還能活化胃蛋白酶，使其能開始分解蛋白質。請問，若某人胃部出現消化不良的現象，可能與下列何種消化液的分泌或作用異常有關？",
-                options: { A: "膽汁分泌不足", B: "胃液分泌異常（過多或過少）", C: "唾液澱粉酶活性過強", D: "胰液中的脂肪酶分泌過多" },
-                answer: 'B',
-                hint: "題目中明確提到了「胃部」的不適，以及「胃酸」和「胃蛋白酶」的功能。那麼，問題最可能出在哪一種消化液上呢？",
-                topic: '各消化器官的功能'
-            },
-            {
-                question: "「民以食為天」，食物是維持生命活動的根本。動物透過攝食獲取養分，而這些養分需要經過消化系統的處理，轉化為小分子才能被吸收利用。請問，下列關於動物攝食、消化與吸收的敘述，何者正確？",
-M                 options: { A: "所有動物的消化方式都相同，皆為細胞內消化。", B: "人體的消化系統包含消化道和消化腺，共同完成養分的分解與吸收。", C: "消化作用是將小分子養分合成大分子養分，以便吸收。", D: "動物攝食後，養分可以直接進入血液循環，無需經過消化過程。" },
-                answer: 'B',
-                hint: "高等動物的消化系統是如何構成的？消化作用是把大分子變小，還是小分子變大？",
-                topic: '消化系統的結構與功能'
-            },
-            {
-                question: "小明經常在飯後感到胃部脹氣、消化不良，他上網查詢資料發現，這可能與食物在胃中的停留時間過長，或是胃部蠕動功能減弱有關。胃是消化道的一部分，負責儲存食物並進行初步消化。請問，下列關於胃的功能，何者敘述最為正確？",
-                options: { A: "胃的主要功能是吸收所有的養分，並將其送往全身。", B: "胃分泌膽汁，用來乳化脂肪，促進其消化。", C: "胃能分解碳水化合物，並將其轉化為葡萄糖。", D: "胃能儲存食物，透過蠕動攪拌食物，並分泌含鹽酸和胃蛋白酶的胃液來初步消化蛋白質。" },
-                answer: 'D',
-                hint: "胃是一個強大的攪拌器和儲藏室，它主要針對哪一類養分進行初步分解？它分泌的消化液有什麼特別之處？",
-                topic: '各消化器官的功能'
-    _       },
-            {
-                question: "「我的餐盤」是國民健康署推廣的飲食指南，鼓勵民眾多攝取蔬菜、水果、全穀雜糧、豆魚蛋肉類，並適量攝取乳品。均衡的飲食是維持身體健康的基石。人體透過消化系統吸收的養分，最終會進入血液循環，被運送到全身各處細胞，提供能量或作為建構材料。請問，下列關於消化吸收後，養分在體內利用的敘述，何者正確？",
-                options: { A: "吸收的葡萄糖主要用於構成身體的骨骼和牙齒。", B: "吸收的脂肪酸和甘油會被肝臟合成蛋白質，以供身體使用。", C: "吸收的葡萄糖可透過呼吸作用釋放能量，供身體活動；吸收的胺基酸則用於建造和修補組織。", D: "吸收的水和礦物質會被直接儲存起來，以備不時之需。" },
-                answer: 'C',
-                hint: "我們吸收的各種小分子養分，像是葡萄糖、胺基酸、脂肪酸，它們在體內各自扮演著什麼樣的角色？誰是主要的能量來源？誰是身體的建築材料？",
-                topic: '養分的利用'
-            }
-        ];
+        const quizData = [
+            {
+                question: "近年來，臺灣興起一股「植物肉」的飲食風潮，許多業者推出以植物性原料製成的漢堡肉、香腸等，以模仿動物肉的口感與風味。這些植物肉的出現，反映了現代人對於健康飲食、動物福利及環境永續的關注。然而，不同來源的蛋白質，其消化吸收的過程與效率可能有所差異。請問，下列關於蛋白質消化與吸收的敘述，何者正確？",
+                options: { A: "蛋白質在口腔中即可開始初步消化，其產物為胺基酸。", B: "胃液中的酵素能將蛋白質分解成小分子，而小腸的酵素則能將其完全分解成單醣。", C: "蛋白質的消化產物為胺基酸，這些胺基酸主要在胃部被吸收進入血液循環。", D: "蛋白質在胃和小腸中被消化分解成胺基酸，最後主要在小腸被吸收。" },
+                answer: 'D',
+                hint: "思考一下蛋白質的消化旅程：它在哪個器官第一次被分解？最終在哪個器官被分解成最小分子並吸收呢？",
+                topic: '蛋白質的消化與吸收'
+            },
+            {
+                question: "「食安」是民眾關心的熱門議題。新聞報導指出，某知名連鎖速食店的炸雞，雖然口感酥脆，但其脂肪含量偏高，長期攝取可能增加健康負擔。炸雞中的主要能量來源是脂肪，而脂肪的消化過程相當複雜，需要多種消化液的協同作用。請問，下列哪一項敘述最符合脂肪在人體消化道內的消化過程？",
+                options: { A: "脂肪在口腔和胃中即可被初步分解為脂肪酸和甘油，並開始被吸收。", B: "膽汁能將大分子脂肪乳化成小脂肪滴，增加脂肪與脂肪酶接觸的表面積，接著由胰液中的脂肪酶將其分解。", C: "脂肪主要在胃部被分解，其消化產物為胺基酸，可直接被胃壁吸收。", D: "食物中的脂肪主要由唾液分解，並在小腸被吸收，其產物為醣類。" },
+                answer: 'B',
+                hint: "脂肪的消化需要一個特別的步驟叫做「乳化」，是哪一種消化液負責這個工作？它在哪裡發揮作用？",
+                topic: '脂肪的消化與吸收'
+            },
+            {
+                question: "新聞報導中常提到「益生菌」對人體腸道健康的好處。益生菌是指對宿主有益的活菌，它們在腸道內可以幫助消化、抑制壞菌生長。而人體的消化系統中，消化道和消化腺扮演著不同的角色。下列關於消化道與消化腺功能的敘述，何者正確？",
+                options: { A: "消化道主要負責分泌消化液，而消化腺則負責將食物分解。", B: "消化腺如肝臟和胰臟，它們分泌的消化液在口腔中開始作用，幫助食物分解。", C: "消化道是食物通過的管道，負責食物的攪拌、蠕動與吸收，而消化腺則分泌消化液來分解食物。", D: "消化道如胃和腸，它們主要負責分泌消化酵素，而消化腺如食道和肛門，則負責食物的運輸。" },
+                answer: 'C',
+                hint: "回想一下消化系統的兩大組成部分：一個是食物實際通過的「管道」，另一個是製造「消化液」的工廠。它們各自的名稱和功能是什麼？",
+                topic: '消化系統的結構與功能'
+            },
+            {
+                question: "根據聯合國糧食及農業組織（FAO）的數據，全球人口不斷增長，對糧食的需求也日益增加。為了解決糧食危機並減少對環境的衝擊，科學家們正積極研發各種新型態的食物來源，例如從植物中提取蛋白質，製成更接近動物肉的「植物肉」。這些植物肉的生產過程，需要將植物中的蛋白質分解成小分子才能被人體吸收利用。請問，這個分解過程與下列哪一種生理作用最為相關？",
+                options: { A: "光合作用", B: "呼吸作用", C: "消化作用", D: "合成作用" },
+                answer: 'C',
+                hint: "將食物中的大分子養分（如蛋白質）分解成身體可吸收的小分子（如胺基酸），這個過程我們稱之為什麼？",
+                topic: '消化作用的定義'
+            },
+            {
+                question: "現代人生活忙碌，常以外食為主，而外食族容易攝取過多精緻澱粉和高油脂食物，長期下來可能導致肥胖、心血管疾病等問題。因此，了解食物的營養成分並做出健康選擇至關重要。某份速食餐點的營養標示顯示：蛋白質3.9g, 脂肪8.0g, 碳水化合物33.9g, 鈉328.6mg。請問下列關於此餐點成分的推論，何者最為合理？",
+                options: { A: "此餐點主要提供能量的養分是蛋白質，每份約可提供3.9大卡的熱量。", B: "此餐點的脂肪含量相當高，其提供的熱量約為23大卡。", C: "此餐點提供的碳水化合物熱量約為135.6大卡，但其中不含任何維生素。", D: "此餐點的碳水化合物含量最高，是主要的能量來源。" },
+                answer: 'D',
+                hint: "記得三大營養素的熱量嗎？蛋白質和碳水化合物每公克約4大卡，脂肪約9大卡。算算看哪種營養素提供的總熱量最多？",
+                topic: '養分與熱量計算'
+            },
+            {
+                question: "古代醫學家認為「脾胃乃後天之本」，強調消化系統對人體健康的重要性。消化系統的各個器官分工合作，共同完成食物的消化吸收。承接上一題的速食餐點營養標示，其中含有豐富的碳水化合物，而碳水化合物的消化過程始於口腔。請問，下列關於口腔在消化過程中扮演的角色，何者最為貼切？",
+                options: { A: "口腔主要分泌胃液，負責分解蛋白質。", B: "口腔中的唾液含有澱粉酶，能將部分澱粉分解成麥芽糖。", C: "口腔負責乳化脂肪，以便後續消化。", D: "口腔能分泌膽汁，幫助消化蛋白質。" },
+                answer: 'B',
+                hint: "我們吃米飯或麵包時，在嘴裡多嚼幾下會感覺到甜味，這是因為哪一種養分被初步分解了？是由什麼酵素作用的呢？",
+                topic: '各消化器官的功能'
+            },
+            {
+                question: "一項研究顯示，許多現代人因工作壓力大，飲食不規律，容易出現胃部不適，如胃酸過多、消化不良等。胃液中的胃酸（鹽酸）除了有殺菌作用外，還能活化胃蛋白酶，使其能開始分解蛋白質。請問，若某人胃部出現消化不良的現象，可能與下列何種消化液的分泌或作用異常有關？",
+                options: { A: "膽汁分泌不足", B: "胃液分泌異常（過多或過少）", C: "唾液澱粉酶活性過強", D: "胰液中的脂肪酶分泌過多" },
+                answer: 'B',
+                hint: "題目中明確提到了「胃部」的不適，以及「胃酸」和「胃蛋白酶」的功能。那麼，問題最可能出在哪一種消化液上呢？",
+                topic: '各消化器官的功能'
+            },
+            {
+                question: "「民以食為天」，食物是維持生命活動的根本。動物透過攝食獲取養分，而這些養分需要經過消化系統的處理，轉化為小分子才能被吸收利用。請問，下列關於動物攝食、消化與吸收的敘述，何者正確？",
+                options: { A: "所有動物的消化方式都相同，皆為細胞內消化。", B: "人體的消化系統包含消化道和消化腺，共同完成養分的分解與吸收。", C: "消化作用是將小分子養分分解成大分子養分，以便吸收。", D: "動物攝食後，養分可以直接進入血液循環，無需經過消化過程。" },
+                answer: 'B',
+                hint: "高等動物的消化系統是如何構成的？消化作用是把大分子變小，還是小分子變大？",
+                topic: '消化系統的結構與功能'
+            },
+            {
+                question: "小明經常在飯後感到胃部脹氣、消化不良，他上網查詢資料發現，這可能與食物在胃中的停留時間過長，或是胃部蠕動功能減弱有關。胃是消化道的一部分，負責儲存食物並進行初步消化。請問，下列關於胃的功能，何者敘述最為正確？",
+                options: { A: "胃的主要功能是吸收所有的養分，並將其送往全身。", B: "胃分泌膽汁，用來乳化脂肪，促進其消化。", C: "胃能分解碳水化合物，並將其轉化為葡萄糖。", D: "胃能儲存食物，透過蠕動攪拌食物，並分泌含鹽酸和胃蛋白酶的胃液來初步消化蛋白質。" },
+                answer: 'D',
+                hint: "胃是一個強大的攪拌器和儲藏室，它主要針對哪一類養分進行初步分解？它分泌的消化液有什麼特別之處？",
+                topic: '各消化器官的功能'
+            },
+            {
+                question: "「我的餐盤」是國民健康署推廣的飲食指南，鼓勵民眾多攝取蔬菜、水果、全穀雜糧、豆魚蛋肉類，並適量攝取乳品。均衡的飲食是維持身體健康的基石。人體透過消化系統吸收的養分，最終會進入血液循環，被運送到全身各處細胞，提供能量或作為建構材料。請問，下列關於消化吸收後，養分在體內利用的敘述，何者正確？",
+                options: { A: "吸收的葡萄糖主要用於構成身體的骨骼和牙齒。", B: "吸收的脂肪酸和甘油會被肝臟合成蛋白質，以供身體使用。", C: "吸收的葡萄糖可透過呼吸作用釋放能量，供身體活動；吸收的胺基酸則用於建造和修補組織。", D: "吸收的水和礦物質會被直接儲存起來，以備不時之需。" },
+                answer: 'C',
+                hint: "我們吸收的各種小分子養分，像是葡萄糖、胺基酸、脂肪酸，它們在體內各自扮演著什麼樣的角色？誰是主要的能量來源？誰是身體的建築材料？",
+                topic: '養分的利用'
+            }
+        ];
 
-        const questionsWrapper = document.getElementById('questions-wrapper');
-        const submitBtn = document.getElementById('submit-btn');
-        const resubmitBtn = document.getElementById('resubmit-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const resultContainer = document.getElementById('result-container');
-        const quizContainer = document.getElementById('quiz-container');
-        const scoreEl = document.getElementById('score');
-        const feedbackSection = document.getElementById('feedback-section');
-        const analysisSection = document.getElementById('analysis-section');
-        const analysisText = document.getElementById('analysis-text');
+        const questionsWrapper = document.getElementById('questions-wrapper');
+        const submitBtn = document.getElementById('submit-btn');
+        const resubmitBtn = document.getElementById('resubmit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const resultContainer = document.getElementById('result-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const scoreEl = document.getElementById('score');
+        const feedbackSection = document.getElementById('feedback-section');
+        const analysisSection = document.getElementById('analysis-section');
+        const analysisText = document.getElementById('analysis-text');
 
-        let incorrectQuestions = [];
-        let submissionCount = 0;
+        let incorrectQuestions = [];
+        let submissionCount = 0;
 
-        function renderQuestions() {
-            questionsWrapper.innerHTML = '';
-            quizData.forEach((quizItem, index) => {
-                const questionEl = document.createElement('div');
-                questionEl.id = `question-${index}`;
-                questionEl.className = 'p-4 border border-gray-200 rounded-lg';
-                
-                let optionsHtml = '';
-                for (const key in quizItem.options) {
-                    optionsHtml += `
-                        <label class="quiz-option flex items-center p-3 mt-2 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-M                           <input type="radio" name="question${index}" value="${key}" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                            <span class="ml-3 text-gray-700">${key}. ${quizItem.options[key]}</span>
-                        </label>
-                    `;
-                }
+        function renderQuestions() {
+            questionsWrapper.innerHTML = '';
+            quizData.forEach((quizItem, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.id = `question-${index}`;
+                questionEl.className = 'p-4 border border-gray-200 rounded-lg';
+                
+                let optionsHtml = '';
+                for (const key in quizItem.options) {
+                    optionsHtml += `
+                        <label class="quiz-option flex items-center p-3 mt-2 border-2 border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="question${index}" value="${key}" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <span class="ml-3 text-gray-700">${key}. ${quizItem.options[key]}</span>
+                        </label>
+                    `;
+                }
 
-M                 questionEl.innerHTML = `
-                    <p class="font-semibold text-gray-800 mb-2">第 ${index + 1} 題</p>
-                    <p class="text-gray-700 leading-relaxed">${quizItem.question}</p>
-                    <div class="mt-4">${optionsHtml}</div>
-                `;
-                questionsWrapper.appendChild(questionEl);
-            });
+                questionEl.innerHTML = `
+                    <p class="font-semibold text-gray-800 mb-2">第 ${index + 1} 題</p>
+                    <p class="text-gray-700 leading-relaxed">${quizItem.question}</p>
+                    <div class="mt-4">${optionsHtml}</div>
+                `;
+                questionsWrapper.appendChild(questionEl);
+            });
 
-            // Add click styling to options
-            document.querySelectorAll('.quiz-option input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(radio => {
-                        radio.parentElement.classList.remove('selected');
-                    });
-                    e.target.parentElement.classList.add('selected');
-Next                 });
-            });
-        }
+            // Add click styling to options
+            document.querySelectorAll('.quiz-option input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(radio => {
+                        radio.parentElement.classList.remove('selected');
+                    });
+                    e.target.parentElement.classList.add('selected');
+                });
+            });
+        }
 
-        function validateForm() {
-            const studentClass = document.getElementById('student-class').value.trim();
-            const studentSeatNum = document.getElementById('student-seatnum').value.trim();
-            const studentName = document.getElementById('student-name').value.trim();
+        function validateForm() {
+            const studentClass = document.getElementById('student-class').value.trim();
+            const studentSeatNum = document.getElementById('student-seatnum').value.trim();
+            const studentName = document.getElementById('student-name').value.trim();
 
-            if (!studentClass || !studentSeatNum || !studentName) {
-                alert('請填寫完整的班級、座號和姓名！');
-section                 return false;
-            }
+            if (!studentClass || !studentSeatNum || !studentName) {
+                alert('請填寫完整的班級、座號和姓名！');
+                return false;
+            }
 
-            const questionsToAnswer = (submissionCount === 0) ? quizData.length : incorrectQuestions.length;
-            let answeredCount = 0;
+            const questionsToAnswer = (submissionCount === 0) ? quizData.length : incorrectQuestions.length;
+            let answeredCount = 0;
 
-            const questionIndices = (submissionCount === 0) ? Array.from(Array(quizData.length).keys()) : incorrectQuestions;
+            const questionIndices = (submissionCount === 0) ? Array.from(Array(quizData.length).keys()) : incorrectQuestions;
 
-            for (const index of questionIndices) {
-                const answer = document.querySelector(`input[name="question${index}"]:checked`);
-                if (answer) {
-                    answeredCount++;
-                }
-            }
+            for (const index of questionIndices) {
+                const answer = document.querySelector(`input[name="question${index}"]:checked`);
+                if (answer) {
+                    answeredCount++;
+                }
+            }
 
-            if (answeredCount < questionsToAnswer) {
-Try                 alert('還有題目沒有作答喔！');
-                return false;
-            }
-            
-            return true;
-        }
+            if (answeredCount < questionsToAnswer) {
+                alert('還有題目沒有作答喔！');
+                return false;
+            }
+            
+            return true;
+        }
 
-        function handleSubmit() {
-            if (!validateForm()) return;
+        function handleSubmit() {
+            if (!validateForm()) return;
 
-            let score = 0;
-            const currentIncorrect = [];
-            const incorrectTopics = {};
+            let score = 0;
+            const currentIncorrect = [];
+            const incorrectTopics = {};
 
-            feedbackSection.innerHTML = '';
+            feedbackSection.innerHTML = '';
 
-            quizData.forEach((quizItem, index) => {
-section                 const questionEl = document.getElementById(`question-${index}`);
-                const options = questionEl.querySelectorAll('.quiz-option');
-                const userAnswer = document.querySelector(`input[name="question${index}"]:checked`)?.value;
+            quizData.forEach((quizItem, index) => {
+                const questionEl = document.getElementById(`question-${index}`);
+                const options = questionEl.querySelectorAll('.quiz-option');
+                const userAnswer = document.querySelector(`input[name="question${index}"]:checked`)?.value;
 
-                options.forEach(opt => {
-                    opt.classList.remove('correct', 'incorrect');
-                    const radio = opt.querySelector('input');
-                    radio.disabled = true; // Disable all options first
-Note                 });
-                
-                if (userAnswer === quizItem.answer) {
-                    score += 10;
-                    questionEl.querySelector(`input[value="${userAnswer}"]`).parentElement.classList.add('correct');
-                } else {
-                    currentIncorrect.push(index);
-M                     questionEl.querySelector(`input[value="${userAnswer}"]`).parentElement.classList.add('incorrect');
-                    
-                    // Add hint for incorrect answer
-                    const hintEl = document.createElement('div');
-                    hintEl.className = 'feedback-hint';
-                    hintEl.innerHTML = `<p class="font-bold text-amber-700">提示：</p><p class="text-amber-600">${quizItem.hint}</p>`;
-Read                     questionEl.appendChild(hintEl);
-                    
-                    // Track incorrect topics
-                    incorrectTopics[quizItem.topic] = (incorrectTopics[quizItem.topic] || 0) + 1;
-                }
-            });
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                    const radio = opt.querySelector('input');
+                    radio.disabled = true; // Disable all options first
+                });
+                
+                if (userAnswer === quizItem.answer) {
+                    score += 10;
+                    questionEl.querySelector(`input[value="${userAnswer}"]`).parentElement.classList.add('correct');
+                } else {
+                    currentIncorrect.push(index);
+                    questionEl.querySelector(`input[value="${userAnswer}"]`).parentElement.classList.add('incorrect');
+                    
+                    // Add hint for incorrect answer
+                    const hintEl = document.createElement('div');
+                    hintEl.className = 'feedback-hint';
+                    hintEl.innerHTML = `<p class="font-bold text-amber-700">提示：</p><p class="text-amber-600">${quizItem.hint}</p>`;
+                    questionEl.appendChild(hintEl);
+                    
+                    // Track incorrect topics
+                    incorrectTopics[quizItem.topic] = (incorrectTopics[quizItem.topic] || 0) + 1;
+                }
+            });
 
-            incorrectQuestions = currentIncorrect;
-            scoreEl.textContent = `${score} 分`;
-            
-            quizContainer.classList.add('hidden');
-s             resultContainer.classList.remove('hidden');
+            incorrectQuestions = currentIncorrect;
+            scoreEl.textContent = `${score} 分`;
+            
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
 
-            if (incorrectQuestions.length > 0) {
-                resubmitBtn.classList.remove('hidden');
-s                 submissionCount++;
-            } else {
-                resubmitBtn.classList.add('hidden');
-                analysisSection.classList.remove('hidden');
-                analysisText.textContent = "太棒了！你全部都答對了，顯示你對消化系統有很深入的了解！";
-s                 sendToGoogleSheet(score);
-            }
+            if (incorrectQuestions.length > 0) {
+                resubmitBtn.classList.remove('hidden');
+                submissionCount++;
+            } else {
+                resubmitBtn.classList.add('hidden');
+                analysisSection.classList.remove('hidden');
+                analysisText.textContent = "太棒了！你全部都答對了，顯示你對消化系統有很深入的了解！";
+                sendToGoogleSheet(score);
+            }
 
-            if (incorrectQuestions.length > 0 && submissionCount > 1) { // After second attempt
-                resubmitBtn.classList.add('hidden');
-                analysisSection.classList.remove('hidden');
-  V               let analysisMsg = "經過修正後，你的表現很棒！不過在以下幾個觀念可能還需要多加強：\n";
-                const topics = Object.keys(incorrectTopics).join('、');
-                analysisMsg += topics + "。";
-                analysisMsg += "建議可以重新閱讀課本的相關章節，或與同學、老師討論，相信你很快就能完全掌握！";
-                analysisText.textContent = analysisMsg;
-                sendToGoogleSheet(score);
-            }
-        }
+            if (incorrectQuestions.length > 0 && submissionCount > 1) { // After second attempt
+                resubmitBtn.classList.add('hidden');
+                analysisSection.classList.remove('hidden');
+                let analysisMsg = "經過修正後，你的表現很棒！不過在以下幾個觀念可能還需要多加強：\n";
+                const topics = Object.keys(incorrectTopics).join('、');
+                analysisMsg += topics + "。";
+                analysisMsg += "建議可以重新閱讀課本的相關章節，或與同學、老師討論，相信你很快就能完全掌握！";
+                analysisText.textContent = analysisMsg;
+                sendToGoogleSheet(score);
+            }
+        }
 
-        function handleResubmit() {
-Settings             quizContainer.classList.remove('hidden');
-            resultContainer.classList.add('hidden');
+        function handleResubmit() {
+            quizContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
 
-            // Reset styling and enable only incorrect questions
-            quizData.forEach((_, index) => {
-                const questionEl = document.getElementById(`question-${index}`);
-                questionEl.querySelectorAll('.quiz-option').forEach(opt => {
-                    const radio = opt.querySelector('input');
-                    if (incorrectQuestions.includes(index)) {
-                        radio.disabled = false;
-Settings                         opt.classList.remove('correct', 'incorrect', 'selected');
-                        radio.checked = false;
-                    } else {
-                         radio.disabled = true;
-                    }
-                });
-                const hint = questionEl.querySelector('.feedback-hint');
-                if (hint) hint.remove();
-            });
+            // Reset styling and enable only incorrect questions
+            quizData.forEach((_, index) => {
+                const questionEl = document.getElementById(`question-${index}`);
+                questionEl.querySelectorAll('.quiz-option').forEach(opt => {
+                    const radio = opt.querySelector('input');
+                    if (incorrectQuestions.includes(index)) {
+                        radio.disabled = false;
+                        opt.classList.remove('correct', 'incorrect', 'selected');
+                        radio.checked = false;
+                    } else {
+                         radio.disabled = true;
+                    }
+                });
+                const hint = questionEl.querySelector('.feedback-hint');
+                if (hint) hint.remove();
+            });
 
-             // Scroll to the first incorrect question
-s             if(incorrectQuestions.length > 0) {
-                document.getElementById(`question-${incorrectQuestions[0]}`).scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+             // Scroll to the first incorrect question
+            if(incorrectQuestions.length > 0) {
+                document.getElementById(`question-${incorrectQuestions[0]}`).scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
-        function sendToGoogleSheet(score) {
-            // ***** 修正點 *****
-            // 我已經刪除了錯誤的 if 判斷式。
-            // 現在程式會直接執行下方的 fetch
-            // ******************
+        function sendToGoogleSheet(score) {
+            // ***** 修正點 *****
+            // 我已經刪除了錯誤的 if 判斷式。
+            // 現在程式會直接執行下方的 fetch
+            // ******************
 
-            const data = {
-                studentClass: document.getElementById('student-class').value,
-                studentSeatNum: document.getElementById('student-seatnum').value,
-                studentName: document.getElementById('student-name').value,
-                score: score,
-                sheetName: 'digestion_exam1' // <-- 指定工作表名稱
-V             };
+            const data = {
+                studentClass: document.getElementById('student-class').value,
+                studentSeatNum: document.getElementById('student-seatnum').value,
+                studentName: document.getElementById('student-name').value,
+                score: score,
+                sheetName: 'digestion_exam1' // <-- 指定工作表名稱
+            };
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Important for this type of request
-M                 cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(() => {
-                console.log('成績已成功送出');
-            })
-            .catch(error => {
-                console.error('送出成績時發生錯誤:', error);
-                alert('無法將成績送到Google試算表，請確認網址是否正確，或檢查您的網路連線。');
-            });
-        }
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Important for this type of request
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(() => {
+                console.log('成績已成功送出');
+            })
+            .catch(error => {
+                console.error('送出成績時發生錯誤:', error);
+                alert('無法將成績送到Google試算表，請確認網址是否正確，或檢查您的網路連線。');
+            });
+        }
 
-        function handleRestart() {
-            submissionCount = 0;
-            incorrectQuestions = [];
-            document.getElementById('student-info-form').reset();
-            resultContainer.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-            resubmitBtn.classList.add('hidden');
-            analysisSection.classList.add('hidden');
-            renderQuestions();
-        }
+        function handleRestart() {
+            submissionCount = 0;
+            incorrectQuestions = [];
+            document.getElementById('student-info-form').reset();
+            resultContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            resubmitBtn.classList.add('hidden');
+            analysisSection.classList.add('hidden');
+            renderQuestions();
+        }
 
-        submitBtn.addEventListener('click', handleSubmit);
-        resubmitBtn.addEventListener('click', handleResubmit);
-        restartBtn.addEventListener('click', handleRestart);
+        submitBtn.addEventListener('click', handleSubmit);
+        resubmitBtn.addEventListener('click', handleResubmit);
+        restartBtn.addEventListener('click', handleRestart);
 
-        // Initial render
-        renderQuestions();
-    </script>
+        // Initial render
+        renderQuestions();
+    </script>
 </body>
 </html>
+
 
