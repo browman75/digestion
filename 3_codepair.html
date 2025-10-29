@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人體消化系統學習遊戲</title>
+    <title>人體消化系統學習遊戲 V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -286,23 +286,23 @@
                 document.querySelectorAll('.organ-card').forEach(c => c.classList.remove('selected'));
             });
         });
-
         function updateProgress() {
-            const progressText = document.getElementById('progress');
-            const progressBar = document.getElementById('progressBar');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            progressText.textContent = `進度：${correctAnswers}/${totalAnswers}`;
-            const percentage = (correctAnswers / totalAnswers) * 100;
-            progressBar.style.width = `${percentage}%`;
-            
-            if (correctAnswers === totalAnswers) {
-                nextBtn.disabled = false;
-                nextBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                nextBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-                showMessage('恭喜！全部答對了，可以進入下一頁！', 'success');
-            }
-        }
+            // const progressText = document.getElementById('progress'); // 移除
+            // const progressBar = document.getElementById('progressBar'); // 移除
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // progressText.textContent = `進度：${correctAnswers}/${totalAnswers}`; // 移除
+            // const percentage = (correctAnswers / totalAnswers) * 100; // 移除
+            // progressBar.style.width = `${percentage}%`; // 移除
+            
+            if (correctAnswers === totalAnswers) {
+                // nextBtn.disabled = false; // 移除：<a> 標籤沒有 disabled 屬性
+                nextBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                nextBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                showMessage('恭喜！全部答對了，可以進入下一頁！', 'success');
+            }
+        }
+        
 
         function showMessage(text, type) {
             // 移除現有的訊息
